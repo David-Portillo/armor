@@ -166,9 +166,11 @@ Open with one line: nine quick questions so armor fits him, about two
 minutes. Then ask them one at a time: one question per message, numbered
 ("2 of 9"), with its short reason. Whenever you have a tool that shows him
 choices to tap (the Claude app shows them in a drawer; Claude Code has its own
-question tool), put each question's choices there, one question per call.
-Only without such a tool, give the choices as a short numbered list, so he can
-answer with just a number. He can always answer in his own words instead.
+question tool), ask every setup question with it: all nine, and each pastor's
+approval, one question per call, not just the first. The question and its
+choices go in the tool, not in your text; around it, a few words at most (a
+short thanks for his last answer). Only without such a tool, give the choices
+as a short numbered list, so he can answer with just a number. He can always answer in his own words instead.
 If he skips a question, keep the default for it (from `settings`) and go on;
 if he skips the pastors, keep the reviewed starting pastors and tell him
 `/armor setup` lets him choose later. Wait for his answer before the next
@@ -201,6 +203,9 @@ message.
    gently and slowly? I'll always be honest; this is only about how.
 9. After you slip up, what do you need first: to know God hasn't given up on
    you, or a plan for next time? You'll get both; this is just the order.
+
+Each of these nine, and each pastor's approval, is its own question in the tap
+tool when you have it, right through to the last one.
 
 Save it all in one call. The values: `crisis_region` US, CA, UK, IE, AU or
 other; `listen_or_act` listen, act or ask; `call_out` say or ask; `length`

@@ -458,7 +458,10 @@ Claude app slides them up in a drawer; Claude Code has its own question tool),
 and only become a typed numbered list where it can't; the same goes for
 approving each pastor and the check-in list. The tester preferred the drawer
 to typing a number. The drawer has a Skip button: a skipped question keeps its
-default, and skipping the pastors keeps the reviewed starting pastors. Each tone question has one short line saying why it is
+default, and skipping the pastors keeps the reviewed starting pastors. In the
+next phone test the drawer came up for the first question only and the rest
+were typed lists, so SKILL.md now says every question and every approval goes
+through the drawer, and says it again right after the list. Each tone question has one short line saying why it is
 asked, so the user knows what they are choosing:
 
 1. **When you're hurting, should I listen first, or jump to what to do?**

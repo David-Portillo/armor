@@ -284,6 +284,9 @@ class SkillText(unittest.TestCase):
         # On the phone the app can show choices in a drawer to tap; a typed
         # numbered list is only the fallback.
         self.assertIn("Whenever you have a tool that shows him choices to tap", text)
+        # On the phone the drawer came up for the first question only.
+        self.assertIn("ask every setup question with it: all nine, and each pastor's approval", text)
+        self.assertIn("right through to the last one", text)
         # The app's drawer has a Skip button; a skip keeps the default.
         self.assertIn("If he skips a question, keep the default for it", text)
         setup = text[text.index("## Setup"):text.index("Save it all in one call.")]
