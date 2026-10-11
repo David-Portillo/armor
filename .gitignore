@@ -3,3 +3,4 @@ settings.yaml
 # package.py output for the Claude app.
 dist/
 __pycache__/
+.DS_Store

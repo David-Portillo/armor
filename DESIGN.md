@@ -58,6 +58,15 @@ the computer. What that requires:
   (`dist/armor.zip`) from this folder: it strips those, leaves out the
   development files (DESIGN.md, README, tests, the build scripts), and keeps
   the user's settings.
+- The app doesn't tell Claude where the skill's folder is. In the first test
+  it guessed `/mnt/skills/plugins/armor`, failed, and had to search before it
+  could answer. So nothing depends on knowing the folder: in the app copy each
+  `verse.py` command finds the script itself (under `/mnt`, or under
+  `~/.claude/skills` for synced copies), and `verse.py --settings` returns the
+  settings.
+- Skills uploaded to the account also sync into Claude Code, as
+  `anthropic-skills:armor` under `~/.claude/skills/synced/`. On a computer
+  where the repo is linked, typing `/armor` runs the linked copy.
 - Settings live in the skill folder, because an uploaded skill has no home
   directory to save to. `settings.example.yaml` holds the defaults; a user's
   own `settings.yaml` overrides it and is kept out of git. After a change the
@@ -92,14 +101,19 @@ mentions struggling in an unrelated conversation.
 
    If his `/armor` message already says what's going on, that answers the
    check-in: the menu isn't shown, and the follow-up still comes.
-2. **One follow-up**, shaped by the moment (what happened, how long, what set it
-   off). If the settings say "depends on the day," also ask whether he wants
-   to be heard or helped.
+2. **One follow-up, always**, before the response, even when he asks for
+   encouragement straight away; only Safety comes before it. (In the first app
+   test the skill skipped it when he was tempted right now.) It is shaped by
+   the moment (what happened, how long, what set it off). If he's tempted
+   right now, that reply opens by telling him to get away from it first (close
+   the tab or app, change rooms, lights on), then asks. If the settings say
+   "depends on the day," it also asks whether he wants to be heard or helped.
 3. **Response** in clearly separated sections:
    - **Scripture**: the passage in the KJV, a plain "in today's words" line
      under it, and an NKJV link (see Sources).
    - **From the Pulpit**: what a pastor from the configured list teaches on
-     this struggle (see Sources).
+     this struggle (see Sources). Comes once the profiles are reviewed;
+     version 1 leaves it out.
    - **Next step**: one thing to do in the next hour, not a program. It is
      something he can do alone (read a psalm aloud, pray, step outside).
      Reaching out to a person is offered as a suggestion, never assumed:
@@ -117,7 +131,8 @@ two or three sentences on why it applies; a paragraph from the pastor; one
 next step; one gentle question. Anything beyond that waits for "want more?"
 
 Moments map to response shapes. For example, "tempted right now" is short and
-urgent (get out of the situation first, then the Word). "After a fall" gives
+urgent, and getting away from it comes first, in the follow-up reply. "After a
+fall" gives
 grace first, then the plan, if the settings ask for that order.
 
 ## Safety
@@ -195,10 +210,13 @@ takes about 55 ms; what costs seconds is each tool round trip and each token
 the model reads. So:
 
 - The check-in needs no tool calls.
-- Settings are read once per conversation, at the first reply.
-- Every reference in a reply is looked up in one `verse.py` call, made in
-  parallel with reading the chosen pastor's profile: at most two tool rounds
-  per reply.
+- Settings come with the first lookup (`verse.py --settings`), once per
+  conversation.
+- Every reference in a reply is looked up in one `verse.py` call: one tool
+  call per reply, run as written, with nothing chained onto it. (In the first
+  app test Claude built a long chained command to read files, which failed.)
+  When From the Pulpit is built, the chosen pastor's profile should come
+  through the same call.
 - SKILL.md stays short. Setup, the moment guide and the pastor profiles live
   in separate files, read only when needed.
 - No permission prompt in a hard moment. In Claude Code, SKILL.md's
@@ -237,10 +255,14 @@ The modern rendering is written by the model, so it is held to strict rules:
 
 - Always labelled ("In today's words"), never presented as Scripture or as a
   translation. The KJV above it is the Word; the rendering only helps read it.
-- Updates language only: thee/thou/ye, -eth/-est endings, and obsolete words
-  (nigh, saith, unto). Watch for words whose meaning has shifted: suffer
-  (allow), let (hinder), prevent (go before), conversation (conduct), quick
-  (living), meat (food), charity (love).
+- Natural modern English: modern words, word order and sentences, the way a
+  man would say it today. Swapping a few old words is not enough. The first
+  app test rendered 1 Corinthians 10:13 as "who will not allow you to be
+  tempted above what you are able", still the KJV's sentence; it should read
+  like "he won't let you be tempted beyond what you can bear." Watch for words
+  whose meaning has shifted: suffer (allow), let (hinder), prevent (go
+  before), conversation (conduct), quick (living), meat (food), charity
+  (love).
 - Adds nothing, drops nothing, and does not interpret. Explaining what the
   verse means belongs in the reflection under it, not in the rendering.
 - When unsure what a word means, keep the KJV word.
@@ -389,13 +411,15 @@ should take with a man who is struggling.
   phone; check first what the Claude app's own voice features already do.
 - **Per-moment tone overrides**, e.g. firmer when tempted, gentler when down.
 - **Testing.** Realistic scenarios (11pm and tempted, a heavy morning, after a
-  fall) to check tone, accuracy and safety before sharing. On the phone:
-  upload, start with `/armor`, confirm the verse lookups run.
+  fall) to check tone, accuracy and safety before sharing. First test,
+  2026-10-11, in the app on a computer: `/armor` started the skill and the menu
+  was skipped as designed; the folder guess, the skipped follow-up and the
+  too-literal rendering were fixed afterwards. Still to test: the phone.
 - **What `tradition` changes.** Nothing is defined yet. For a Baptist, one
   clear effect: a fall never puts his salvation in doubt (eternal security),
   which shapes every "after a fall" reply.
-- **Pastor profiles.** Draft the six starting profiles for review; From the
-  Pulpit appears only once a profile exists.
+- **Pastor profiles.** Draft the six starting profiles for review, then put
+  From the Pulpit back into SKILL.md.
 - **First-run setup.** Ask the setup questions and write `settings.yaml`.
 - **Going public.** The repo stays private until version 1 has been tested on
   a phone. The license is MIT, chosen so anyone can reuse armor freely,

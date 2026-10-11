@@ -66,6 +66,20 @@ class Lookup(unittest.TestCase):
     def test_partial_verse_reads_whole_verse(self):
         self.assertEqual(look("Gal 5:16b")[1]["results"][0]["ref"], "Galatians 5:16")
 
+    def test_settings_come_with_the_lookup(self):
+        code, out = look("--settings", "Psalm 34:18")
+        self.assertEqual(code, 0)
+        name = "settings.yaml" if (HERE / "settings.yaml").exists() else "settings.example.yaml"
+        self.assertEqual(out["settings_file"], name)
+        self.assertEqual(out["settings"], (HERE / name).read_text(encoding="utf-8"))
+        self.assertEqual(out["results"][0]["ref"], "Psalm 34:18")
+
+    def test_settings_alone(self):
+        code, out = look("--settings")
+        self.assertEqual(code, 0)
+        self.assertEqual(out["results"], [])
+        self.assertIn("tone:", out["settings"])
+
     def test_book_spellings(self):
         cases = {
             "1 Jn 1:9": "1 John", "First John 1:9": "1 John", "1st John 1:9": "1 John",
@@ -156,6 +170,23 @@ class Package(unittest.TestCase):
         self.assertLessEqual(keys, {"name", "description", "license", "compatibility", "metadata"})
         self.assertIn("name: armor", front.splitlines())
         self.assertNotIn("${CLAUDE_", md)
+
+    def test_app_command_finds_verse_py_by_itself(self):
+        """Run the exact command from the app copy, with the package unzipped
+        where Claude Code keeps synced account skills (HOME is a temp dir)."""
+        md = self.zip.read("armor/SKILL.md").decode("utf-8")
+        cmd = re.search(r"`(python3 \"\$\(find [^`]*--settings)`", md)
+        self.assertIsNotNone(cmd, "no self-locating --settings command in the app copy")
+        with tempfile.TemporaryDirectory() as home:
+            synced = Path(home) / ".claude" / "skills" / "synced" / "x"
+            synced.mkdir(parents=True)
+            self.zip.extractall(synced)
+            p = subprocess.run(["bash", "-c", cmd[1] + ' "Psalm 34:18"'], capture_output=True, text=True,
+                               cwd=home, env={"HOME": home, "PATH": "/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin"})
+            self.assertEqual(p.returncode, 0, p.stderr)
+            out = json.loads(p.stdout)
+            self.assertIn("tone:", out["settings"])
+            self.assertTrue(out["results"][0]["verses"][0][1].startswith("The LORD is nigh"))
 
     def test_lookup_runs_from_the_unzipped_copy(self):
         with tempfile.TemporaryDirectory() as d:

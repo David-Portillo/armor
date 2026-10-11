@@ -14,7 +14,9 @@ ${CLAUDE_SKILL_DIR}. So this copy:
 - keeps only the frontmatter keys the app accepts. Claude Code's
   disable-model-invocation and allowed-tools stay behind: in the app the
   description itself limits the skill to /armor, and code runs without asking;
-- replaces ${CLAUDE_SKILL_DIR} with "<skill folder>" and says what that means;
+- turns each `python3 ${CLAUDE_SKILL_DIR}/verse.py` command into one that finds
+  verse.py by itself (see LOOKUP). SKILL.md may use ${CLAUDE_SKILL_DIR} only in
+  those commands, so nothing else depends on knowing the folder;
 - carries only what the skill needs when it runs: SKILL.md, verse.py, the KJV
   text, the settings, any pastor profiles, and the license. The design notes,
   README, tests and build scripts stay out.
@@ -29,7 +31,17 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 NAME = "armor"  # the app requires the folder in the ZIP to match the skill name
 APP_KEYS = {"name", "description", "license", "compatibility", "metadata"}
-NOTE = "In this copy, `<skill folder>` means the folder this SKILL.md is in.\n\n"
+
+# The app doesn't tell Claude where the skill's folder is. Left to guess, it
+# tried /mnt/skills/plugins/armor, failed, and had to search before it could
+# answer. So each command finds verse.py itself: /mnt is where the app keeps
+# skills, and ~/.claude/skills is where Claude Code keeps the copies it syncs
+# from the account. Both searches take milliseconds.
+LOOKUP = "python3 \"$(find /mnt ~/.claude/skills -path '*/armor/verse.py' -print -quit 2>/dev/null)\""
+NOTE = ("In this copy, each `verse.py` command finds the script by itself. If one "
+        "ever says it can't open the file, locate it with "
+        "`find / -path '*/armor/verse.py' -print -quit 2>/dev/null` and run that "
+        "path instead.\n\n")
 
 
 def fail(msg):
@@ -47,10 +59,12 @@ def app_skill_md():
             key = line.split(":", 1)[0].strip()
         if key in APP_KEYS:
             kept.append(line)
-    body = text[m.end():].replace("${CLAUDE_SKILL_DIR}", "<skill folder>")
+    body = text[m.end():].replace("python3 ${CLAUDE_SKILL_DIR}/verse.py", LOOKUP)
+    if "${CLAUDE_SKILL_DIR}" in body:
+        fail("SKILL.md uses ${CLAUDE_SKILL_DIR} outside a verse.py command; the app can't resolve it")
     body, n = re.subn(r"^(# .*\n\n)", lambda h: h[1] + NOTE, body, count=1, flags=re.M)
     if not n:
-        fail("SKILL.md body has no top-level heading to put the folder note under")
+        fail("SKILL.md body has no top-level heading to put the note under")
     out = "---\n" + "\n".join(kept) + "\n---\n" + body
 
     keys = {line.split(":", 1)[0] for line in kept if line and not line[0].isspace()}

@@ -9,9 +9,15 @@ the bundled public-domain text in bible/<translation>.txt: one verse per line
 bible/build.py).
 
     verse.py "Psalm 34:18" "Heb 4:15-16" "1 John 1:9" "Romans 8:28,38-39" "Psalm 23"
+    verse.py --settings "Psalm 34:18"      # first reply: settings too
+    verse.py --settings                    # settings alone
 
 Pass every reference a reply needs in one call. Each call is a tool round trip
-for the skill, which costs far more time than the lookup itself.
+for the skill, which costs far more time than the lookup itself. --settings
+adds the user's settings (settings.yaml, else settings.example.yaml) to the
+output as "settings_file" and "settings", so the first reply needs no separate
+read and the skill never has to work out where its folder is. (In the Claude
+app it guessed wrong once and the whole step failed.)
 
 Prints one line of JSON:
 
@@ -225,10 +231,23 @@ def resolve(code, chapter, spec, verses, titles, order, pos):
 
 def main():
     p = argparse.ArgumentParser(description="Look up verses in the bundled Bible text.")
-    p.add_argument("refs", nargs="+", help='e.g. "Psalm 34:18" "Heb 4:15-16"')
+    p.add_argument("refs", nargs="*", help='e.g. "Psalm 34:18" "Heb 4:15-16"')
+    p.add_argument("--settings", action="store_true",
+                   help="also return the settings (settings.yaml, else settings.example.yaml)")
     p.add_argument("--translation", default="kjv", help="bundled text to read (default: kjv)")
     args = p.parse_args()
+    if not args.refs and not args.settings:
+        p.error("give at least one reference, or --settings")
     out = {"translation": args.translation.upper(), "results": [], "errors": []}
+
+    if args.settings:
+        for name in ("settings.yaml", "settings.example.yaml"):
+            if (HERE / name).exists():
+                out["settings_file"] = name
+                out["settings"] = (HERE / name).read_text(encoding="utf-8")
+                break
+        else:
+            out["errors"].append("no settings.yaml or settings.example.yaml next to verse.py")
 
     # The translation name becomes a file path, so it may only name a file
     # in bible/.
@@ -245,7 +264,7 @@ def main():
         except ValueError as e:
             out["errors"].append(str(e))
 
-    verses, titles, order = load(args.translation, {code for code, _, _ in parsed})
+    verses, titles, order = load(args.translation, {code for code, _, _ in parsed}) if parsed else ({}, {}, [])
     pos = {k: i for i, k in enumerate(order)}
     for code, chapter, spec in parsed:
         try:
