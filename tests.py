@@ -280,14 +280,16 @@ class SkillText(unittest.TestCase):
 
     def test_chat_fallback_finds_verse_py_by_itself(self):
         """In chat the placeholder isn't filled in, so SKILL.md has Claude find
-        the script. Run that expression against a scratch folder standing in
-        for the chat sandbox's /mnt."""
-        expr = re.search(r'`("\$\(find /mnt /home [^`]*\)")`', self.md)
+        the script. On the phone the app kept the plugin under
+        ~/.claude/plugins/synced/<account>/ in its sandbox; a scratch folder
+        stands in for that ~/.claude here."""
+        expr = re.search(r'`("\$\(find ~/\.claude /mnt /home [^`]*\)")`', self.md)
         self.assertIsNotNone(expr, "no chat fallback find expression in SKILL.md")
-        with tempfile.TemporaryDirectory() as root:
-            shutil.copytree(SKILL, Path(root) / "skills" / "user" / "armor",
+        with tempfile.TemporaryDirectory() as home:
+            claude = Path(home) / ".claude"
+            shutil.copytree(SKILL, claude / "plugins" / "synced" / "account_id" / "armor" / "skills" / "armor",
                             ignore=shutil.ignore_patterns("settings.yaml", "my-pastors"))
-            cmd = "python3 " + expr[1].replace("/mnt /home", root) + ' --settings "Psalm 34:18"'
+            cmd = "python3 " + expr[1].replace("~/.claude", str(claude)) + ' --settings "Psalm 34:18"'
             p = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True)
             self.assertEqual(p.returncode, 0, p.stderr)
             self.assertTrue(json.loads(p.stdout)["results"][0]["verses"][0][1].startswith("The LORD is nigh"))

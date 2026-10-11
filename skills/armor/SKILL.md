@@ -30,10 +30,12 @@ Claude Code and Cowork its path is already filled in: run the commands exactly
 as written. If the path still shows the placeholder CLAUDE_SKILL_DIR, you are
 in the Claude app's chat, which doesn't fill it in. There:
 
-- Put `"$(find /mnt /home -path '*/armor/verse.py' -print -quit 2>/dev/null)"`
-  in place of the path up to and including `/verse.py`. If that finds nothing,
-  locate the script once with `find / -path '*/armor/verse.py' -print -quit
-  2>/dev/null` and use that path for the rest of the conversation.
+- Put `"$(find ~/.claude /mnt /home -path '*/armor/verse.py' -print -quit 2>/dev/null)"`
+  in place of the path up to and including `/verse.py`. The app keeps the
+  skill under `~/.claude/plugins` in its sandbox, so this finds it at once.
+  Don't guess a path. If it finds nothing, locate the script once with
+  `find / -path '*/armor/verse.py' -print -quit 2>/dev/null` and use that path
+  for the rest of the conversation.
 - Nothing you save lasts beyond this chat; every chat starts with a fresh copy
   of the skill (see Setup).
 

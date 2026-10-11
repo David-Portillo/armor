@@ -9,8 +9,8 @@ Named for Ephesians 6:10-18, the armor of God.
 
 Status: version 1 built and being tested. armor is packaged as a Claude plugin
 (this repository, public on GitHub since 2026-10-11) and passes `claude plugin
-validate`, ready to submit to Anthropic's directory. The six starting pastor profiles are reviewed. Setup
-has run and saved in the Claude app; not yet tried on a phone.
+validate`, ready to submit to Anthropic's directory. The six starting pastor profiles are reviewed. It runs
+in the Claude app on the computer and on the phone (Android, 2026-10-11).
 
 ## Posture
 
@@ -50,7 +50,8 @@ every place:
   it is listed, or uploaded as a custom skill (`package.py` builds the ZIP).
   Anthropic's help center says custom skills work on every plan with code
   execution on, while directory plugins are for paid plans. Neither page
-  mentions iOS or Android, so the phone is tested before relying on it.
+  mentions iOS or Android; armor has since run on Android, installed from
+  this repository as a plugin.
 
 The phone matters most: the hard moments are often late at night, away from
 the computer. What that requires:
@@ -64,8 +65,11 @@ the computer. What that requires:
 - Claude Code and Cowork fill in the skill-folder placeholder
   (CLAUDE_SKILL_DIR) with the skill's folder; the app's chat doesn't, and copies the folder into its sandbox
   instead. SKILL.md has Claude tell which it is in from whether the path got
-  filled in, and in chat find `verse.py` itself. (In the first app test Claude
-  guessed `/mnt/skills/plugins/armor` and the step failed.) The placeholder
+  filled in, and in chat find `verse.py` itself, without guessing. (In the
+  first app test Claude guessed `/mnt/skills/plugins/armor` and the step
+  failed. On the phone the plugin turned out to sit under
+  `~/.claude/plugins/synced/<account>/` in the sandbox, which the first
+  search missed, so that folder is now searched first.) The placeholder
   appears only in commands, because Claude Code replaces every occurrence,
   prose included.
 - The app's chat keeps nothing between chats; every chat starts with a fresh
@@ -493,7 +497,10 @@ should take with a man who is struggling.
   was skipped as designed; the folder guess, the skipped follow-up and the
   too-literal rendering were fixed afterwards. Setup then ran in the app and
   saved; pasting the settings line was the awkward part, so the tester's
-  answers were built into his own ZIP. Still to test: the phone.
+  answers were built into his own ZIP. First phone test (Android), installed
+  from this repository as a plugin: the skill loaded and setup began, but
+  three lookups failed before Claude found `verse.py` under
+  `~/.claude/plugins/synced/`; the search now starts there.
 - **What `tradition` changes.** Nothing is defined yet. For a Baptist, one
   clear effect: a fall never puts his salvation in doubt (eternal security),
   which shapes every "after a fall" reply.
