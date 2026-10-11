@@ -169,7 +169,10 @@ choices to tap (the Claude app shows them in a drawer; Claude Code has its own
 question tool), put each question's choices there, one question per call.
 Only without such a tool, give the choices as a short numbered list, so he can
 answer with just a number. He can always answer in his own words instead.
-Wait for his answer before the next question. Never put two questions in one
+If he skips a question, keep the default for it (from `settings`) and go on;
+if he skips the pastors, keep the reviewed starting pastors and tell him
+`/armor setup` lets him choose later. Wait for his answer before the next
+question. Never put two questions in one
 message.
 
 1. His church tradition: Baptist, Reformed, Pentecostal, non-denominational,
