@@ -347,6 +347,15 @@ class SkillText(unittest.TestCase):
         self.assertIn("one short verse and From the Pulpit (one sentence from each pastor who speaks, per `pulpit`) follow",
                       text)
 
+    def test_referenced_verses_are_shown_with_todays_words(self):
+        # On the phone the tester saw references like (Psalm 27:14) in From the
+        # Pulpit and wanted the verse itself, with today's words, right after.
+        text = " ".join(self.md.split())
+        self.assertIn("keeps its reference in the sentence, linked to the NKJV, and the verse itself follows "
+                      "right after that paragraph or that pastor's line", text)
+        self.assertIn('**Proverbs 3:5-6 (KJV)**: "Trust in the LORD with all thine heart;', self.md)
+        self.assertNotIn("retold in today's words, without quotation marks", text)
+
     def test_safety_still_comes_first_in_crisis_replies(self):
         self.assertIn("What\n  keeps him safe always comes first;", self.md)
         self.assertIn("then, last, ask him directly", self.md)

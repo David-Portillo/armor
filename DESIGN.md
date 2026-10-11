@@ -317,22 +317,30 @@ The NKJV link is there for a modern reading that is an actual translation.
 
 #### Verses mentioned in passing
 
-Outside the Scripture blocks (in the reflection, From the Pulpit, the next
-step), verses are retold in today's words without quotation marks, and the
-reference is an NKJV link:
+Outside the Scripture blocks (in From the Pulpit, a reflection, the next
+step), a verse keeps its reference in the sentence, linked to the NKJV, and
+the verse itself follows right after that paragraph or pastor's line: the
+exact KJV, then its "In today's words" line.
 
-> The people closest to him said he'd lost his mind
-> ([Mark 3:21](https://www.biblegateway.com/passage/?search=Mark+3%3A21&version=NKJV)).
+> ...lean on him instead of your own read of things, and he'll direct your
+> path ([Proverbs 3:5-6](https://www.biblegateway.com/passage/?search=Proverbs+3%3A5-6&version=NKJV)).
+>
+> **Proverbs 3:5-6 (KJV)**: "Trust in the LORD with all thine heart; and lean
+> not unto thine own understanding. In all thy ways acknowledge him, and he
+> shall direct thy paths."
+> *In today's words:* "Trust the LORD with all your heart, and don't lean on
+> your own understanding. In everything you do, acknowledge him, and he will
+> direct your paths."
 
-- Retold, not quoted: reported speech doesn't claim to be the exact words, and
-  there is no archaic phrase to stop and translate mid-sentence. Exact KJV
-  wording appears only in Scripture blocks.
+- Shown, not only retold. These verses were first retold in today's words
+  with just a linked reference, so the reading wasn't interrupted; on the
+  phone the tester wanted to read the verse itself without leaving the reply,
+  so it now follows the paragraph (changed 2026-10-11).
 - Still looked up first. Retelling from memory is how the first dry run said
   Jesus' *family* thought he'd lost his mind; the text says his friends (KJV)
-  or his own people (NKJV). `verse.py` supplies both the text to retell and
-  the link.
-- When the exact words are the point (something worth memorizing), make it a
-  full Scripture block instead of retelling it.
+  or his own people (NKJV). `verse.py` supplies the text and the link.
+- The safety replies stay short, so there other passages are mentioned by
+  reference only.
 
 #### Psalm titles
 
