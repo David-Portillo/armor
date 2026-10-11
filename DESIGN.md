@@ -8,8 +8,8 @@ next step. It runs in Claude Code and in the Claude app, including on a phone.
 Named for Ephesians 6:10-18, the armor of God.
 
 Status: version 1 built and being tested. armor is packaged as a Claude plugin
-(this repository) and passes `claude plugin validate`, ready to submit to
-Anthropic's directory. The six starting pastor profiles are reviewed. Setup
+(this repository, public on GitHub since 2026-10-11) and passes `claude plugin
+validate`, ready to submit to Anthropic's directory. The six starting pastor profiles are reviewed. Setup
 has run and saved in the Claude app; not yet tried on a phone.
 
 ## Posture
@@ -476,8 +476,8 @@ should take with a man who is struggling.
   is private, with the Claude GitHub App installed); answer the data-handling
   questions (armor stores no personal data beyond setup's answers, sends
   nothing to any other service, keeps nothing about conversations, and isn't
-  meant for people under 18) and the compliance step; submit. The repository
-  must be public before the listing goes live. The name `armor` may be held as
+  meant for people under 18) and the compliance step; submit. (The repository
+  is public, as the listing requires.) The name `armor` may be held as
   generic or found taken; the fallback is `armor-of-god`, settled before the
   first publish, since a plugin's name is permanent.
 - **Settings after a plugin update.** A plugin installed in Claude Code is
@@ -497,8 +497,8 @@ should take with a man who is struggling.
 - **What `tradition` changes.** Nothing is defined yet. For a Baptist, one
   clear effect: a fall never puts his salvation in doubt (eternal security),
   which shapes every "after a fall" reply.
-- **Going public.** The license is MIT, chosen so anyone can reuse armor
-  freely, accepting that others may also sell it or change it.
+- **License.** MIT, chosen so anyone can reuse armor freely, accepting that
+  others may also sell it or change it.
 
 ## Set aside
 
