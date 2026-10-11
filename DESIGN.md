@@ -7,11 +7,10 @@ next step. It runs in Claude Code and in the Claude app, including on a phone.
 
 Named for Ephesians 6:10-18, the armor of God.
 
-Status: version 1 built and being tested: SKILL.md (setup, check-in, safety,
-Scripture, From the Pulpit, next step), the verse lookup and the packaging for
-the app. The six starting pastor profiles are drafted and waiting for review;
-until a profile is approved, From the Pulpit leaves that pastor out. Not yet
-tried on a phone.
+Status: version 1 built and being tested. armor is packaged as a Claude plugin
+(this repository) and passes `claude plugin validate`, ready to submit to
+Anthropic's directory. The six starting pastor profiles are reviewed. Setup
+has run and saved in the Claude app; not yet tried on a phone.
 
 ## Posture
 
@@ -26,6 +25,10 @@ tried on a phone.
   No "I hear you," no bulleted therapy-speak. The section headings and verse
   labels are the only formatting in a reply.
 - **Honest about sources.** Never invents a verse's wording or a pastor's view.
+- **Spiritual encouragement, not therapy.** armor isn't counseling or medical
+  advice and never presents itself as either. Anthropic's usage policy treats
+  assessing or treating a mental health condition as high-risk, needing a
+  licensed professional in the loop; armor points to real people instead.
 
 ## Self-contained
 
@@ -36,62 +39,64 @@ Claude Code settings the first time it runs (see Speed).
 
 ## Where it runs
 
-The same folder serves two places:
+armor is a Claude plugin. The repository root holds `.claude-plugin/plugin.json`
+and a `marketplace.json` (so it can be installed straight from the
+repository), and the skill itself is `skills/armor/`. That one folder serves
+every place:
 
-- **Claude Code**, on a computer: linked into `~/.claude/skills/armor`.
-- **The Claude app**, on the web and the phone: uploaded as a custom skill, a
-  ZIP of the folder added under Customize > Skills. Anthropic's help center
-  says custom skills work on every plan, Free included, with code execution
-  turned on. It doesn't mention iOS or Android, so the first upload is tested
-  on the phone before relying on it.
+- **Claude Code**, on a computer: installed as a plugin, or the skill folder
+  linked into `~/.claude/skills/armor` while working on it.
+- **The Claude app**, on the web and the phone: from Anthropic's directory once
+  it is listed, or uploaded as a custom skill (`package.py` builds the ZIP).
+  Anthropic's help center says custom skills work on every plan with code
+  execution on, while directory plugins are for paid plans. Neither page
+  mentions iOS or Android, so the phone is tested before relying on it.
 
 The phone matters most: the hard moments are often late at night, away from
 the computer. What that requires:
 
 - Plain Agent Skills format: Python's standard library only, no network at
-  runtime, no paths outside the folder, nothing tied to one operating system.
-  The Bible text and lookup zip to 1.33 MB.
-- The app accepts only `name`, `description`, `license`, `compatibility`,
-  `metadata` and `allowed-tools` in SKILL.md's frontmatter; any other key
-  fails the upload. Claude Code-only features (such as
-  `disable-model-invocation`, `${CLAUDE_SKILL_DIR}` and `!` command blocks)
-  therefore stay out of the app copy. `package.py` builds the app ZIP
-  (`dist/armor.zip`) from this folder: it strips those, leaves out the
-  development files (DESIGN.md, README, tests, the build scripts), and keeps
-  the user's settings.
-- The app doesn't tell Claude where the skill's folder is. In the first test
-  it guessed `/mnt/skills/plugins/armor`, failed, and had to search before it
-  could answer. So nothing depends on knowing the folder: in the app copy each
-  `verse.py` command finds the script itself (under `/mnt`, or under
-  `~/.claude/skills` for synced copies), and `verse.py --settings` returns the
-  settings.
+  runtime, no paths outside the skill folder, nothing tied to one operating
+  system.
+- One SKILL.md for every surface, using only the frontmatter keys the app
+  accepts (`name`, `description`, `license`, `compatibility`, `metadata`,
+  `allowed-tools`); any other key fails an upload.
+- Claude Code and Cowork fill in `${CLAUDE_SKILL_DIR}` with the skill's
+  folder; the app's chat doesn't, and copies the folder into its sandbox
+  instead. SKILL.md has Claude tell which it is in from whether the path got
+  filled in, and in chat find `verse.py` itself. (In the first app test Claude
+  guessed `/mnt/skills/plugins/armor` and the step failed.) The placeholder
+  appears only in commands, because Claude Code replaces every occurrence,
+  prose included.
+- The app's chat keeps nothing between chats; every chat starts with a fresh
+  copy of the skill. The same signal tells Claude that setup's answers won't
+  last, so it hands him one line, "armor settings: ...", in a copy box, to
+  paste into Claude's Settings under "What personal preferences should Claude
+  consider in responses?", which armor reads in every chat. (An earlier
+  version marked the uploaded copy with a file; a plugin can't carry such a
+  marker, so the placeholder became the one signal.) A man who runs setup in
+  Claude Code and then builds his own ZIP carries his answers inside it, with
+  nothing to paste.
+- Settings live in the skill folder. `settings.example.yaml` holds the
+  defaults; a user's own `settings.yaml`, written by setup, overrides it and is
+  kept out of git, as are the profiles he adds in `my-pastors/`.
 - Skills uploaded to the account also sync into Claude Code, as
-  `anthropic-skills:armor` under `~/.claude/skills/synced/`. On a computer
-  where the repo is linked, typing `/armor` runs the linked copy.
-- Settings live in the skill folder, because an uploaded skill has no home
-  directory to save to. `settings.example.yaml` holds the defaults; a user's
-  own `settings.yaml`, written by setup, overrides it and is kept out of git,
-  as are the profiles he adds in `my-pastors/`.
-- The app keeps nothing between chats: every chat gets a fresh copy of the
-  skill. `package.py` marks the app copy with an empty `.app-copy` file, so
-  `verse.py` reports `persistent: false` there. To carry his answers to the
-  phone, a man runs setup once in Claude Code and then builds and uploads the
-  ZIP, which includes `settings.yaml` and his approved profiles. Someone who
-  can't do that (installing from the directory later, say) gets his settings
-  as one line, "armor settings: ...", to paste into his Claude profile
-  preferences, which the skill reads in every chat.
+  `anthropic-skills:armor`. On a computer where the repo is linked, typing
+  `/armor` runs the linked copy.
+- Every file stays under 256 KiB, the size above which the directory holds a
+  file for a manual review, so the Bible is split into one file per book.
 
 ## Starting the skill
 
-Only `/armor` starts it. Claude never starts it on its own, even when a man
-mentions struggling in an unrelated conversation.
+Only `/armor` starts it. Claude should never start it on its own, even when a
+man mentions struggling in an unrelated conversation.
 
-- Claude Code: `disable-model-invocation: true`, so Claude never loads the
-  skill by itself, and typing `/armor` does.
-- The app doesn't accept that setting, and there Claude picks skills from
-  their descriptions. So the description itself says to use the skill only
-  when a message starts with `/armor`. That is strong guidance rather than a
-  lock; test it on the phone.
+Claude Code's `disable-model-invocation` would make that a hard rule there,
+but the app refuses that key, and a plugin uses one SKILL.md everywhere. So
+the description does the job on every surface: use the skill only when a
+message starts with `/armor`. That is strong guidance rather than a lock
+(decided when armor became a plugin). In Claude Code a plugin's skill may show
+as `/armor:armor`.
 
 ## Session flow
 
@@ -122,11 +127,11 @@ mentions struggling in an unrelated conversation.
    right now, that reply opens by telling him to get away from it first (close
    the tab or app, change rooms, lights on), then asks. If the settings say
    "depends on the day," it also asks whether he wants to be heard or helped.
-3. **Response** in clearly separated sections:
+3. **Response**, every time in the same three sections:
    - **Scripture**: the passage in the KJV, a plain "in today's words" line
      under it, and an NKJV link (see Sources).
-   - **From the Pulpit**: what one of his pastors taught on this struggle,
-     using only profiles he has reviewed (see Sources).
+   - **From the Pulpit**: what one of the pastors he approved taught on this
+     struggle (see Sources). Every response includes it.
    - **Next step**: one thing to do in the next hour, not a program. It is
      something he can do alone (read a psalm aloud, pray, step outside).
      Reaching out to a person is offered as a suggestion, never assumed:
@@ -138,6 +143,9 @@ mentions struggling in an unrelated conversation.
      the pastor, more to talk through) rather than front-loading it.
 4. **Stay in the conversation** if he wants to keep talking; tone can be
    changed at any point ("be gentler", "be straight with me").
+
+Setup turns, the follow-up question and the safety replies below aren't
+responses in this sense; a man in crisis gets short replies, not a devotional.
 
 Length: about what the first dry run produced. Two short passages, each with
 two or three sentences on why it applies; a paragraph from the pastor; one
@@ -230,8 +238,8 @@ the model reads. So:
   call per reply outside setup, run as written, with nothing chained onto it.
   (In the first app test Claude built a long chained command to read files,
   which failed.)
-- SKILL.md stays short. Setup, the moment guide and the pastor profiles live
-  in separate files, read only when needed.
+- SKILL.md stays short; the pastor profiles live in separate files, returned
+  only when needed.
 - No permission prompt in a hard moment. In Claude Code, SKILL.md's
   `allowed-tools` covers only the turn that started the skill; the grant
   clears at his next message. So the README tells the user to answer the first
@@ -310,44 +318,56 @@ returns it separately, so that retelling is looked up too.
 
 #### The bundled text and the lookup
 
-`bible/kjv.txt`: the 66 books (31,102 verses; deuterocanon left out), public
-domain from eBible.org, rebuilt by `python3 bible/build.py`. One verse per
-line; each psalm title on its own verse-0 line. The build:
+`skills/armor/bible/kjv/`: the 66 books, one file each (31,102 verses;
+deuterocanon left out), public domain from eBible.org, rebuilt by `python3
+tools/build_bible.py`. One verse per line; each psalm title on its own verse-0
+line. The largest file, Psalms, is about 249 KiB. The build:
 
 - strips the [brackets] marking translators' supplied words and the ¶
   paragraph marks (the supplied words stay);
 - moves the psalm titles out of verse 1, where eBible.org's verse-per-line
   file puts them (Psalm 51:1 had read "To the chief Musician, ... Have mercy
   upon me"), using eBible.org's USFM edition to find where each title ends;
-- checks the book list, the verse count, that all 116 titles were found, and
-  that no marks remain, and replaces the file only if every check passes.
+- checks the book list, the verse count, that all 116 titles were found, that
+  no marks remain and that no file reaches 256 KiB, and replaces the text only
+  if every check passes.
 
 `verse.py "Psalm 34:18" "Heb 4:15-16"` prints one line of compact JSON: for
 each reference, the verses with their numbers, the NKJV link, and the psalm
 title when there is one. One bad reference is reported in `errors` (exit 1)
 without losing the others. It reads only the books asked for. `python3
-tests.py` checks the lookup, the bundled text and the app package.
+tests.py` checks the lookup, the bundled text, setup, the profiles, the ZIP,
+and what the directory checks.
 
 ### From the Pulpit
 
 - A summary of what a pastor teaches on the struggle, with his name and the
   Bible references he leans on. No sermon links and no web searching.
+- In every response. armor picks, from the pastors he approved, the one who
+  speaks most to his struggle (each profile lists what he `speaks_to`); if
+  none speaks to it directly, the one whose teaching comes closest, connected
+  honestly. If none of his pastors has a profile it can use, it falls back to
+  a reviewed starting pastor and tells him once that `/armor setup` lets him
+  choose.
 - Each pastor has a profile, `pastors/<name>.md`, holding what he is actually
   known for: recurring themes, the passages he leans on, his voice, and the
   struggles he speaks to most strongly.
-- For this section the skill steps back from its own voice: it picks the
-  pastor whose profile best fits the struggle, reads that profile, and writes
-  what he teaches in his spirit, in the third person ("Wilkerson taught
-  that..."). Never first person; that would put words in a real man's mouth.
+- For this section the skill steps back from its own voice: it reads that
+  pastor's profile and writes what he teaches in his spirit, in the third
+  person ("Wilkerson taught that..."). Never first person; that would put
+  words in a real man's mouth.
 - Profiles are files, not separate agents. A subagent per pastor would start
   cold and take too long for someone who is tempted right now.
-- Only teaching the pastor is actually known for. If no profile fits, or the
-  model is not confident about a view, it picks another pastor rather than
-  inventing one. No made-up direct quotes.
-- Nothing about a real man reaches a reply until the user has read it. Each
-  profile has `reviewed: false` until he approves it, and `verse.py --pastor`
-  refuses an unreviewed profile, so From the Pulpit can't use it even by
-  mistake.
+- Only teaching the pastor is actually known for. No made-up direct quotes.
+- Two approvals stand between a profile and a reply:
+  - The maintainer's: a profile ships with `reviewed: false` until someone
+    has checked it against published sources, and `verse.py --pastor` refuses
+    an unreviewed profile, so a draft can't reach a reply even by mistake.
+  - The user's own: setup shows each pastor he picks, one at a time (who he
+    is, what he's known for teaching, what he says to the struggles armor
+    meets), and saves only the ones he approves. He needs at least one, since
+    every response includes From the Pulpit; `verse.py --save-settings`
+    refuses an empty list.
 - Adding a pastor means adding a profile. In Claude Code, setup drafts one for
   a new name, shows it to him, and saves it in `my-pastors/` marked reviewed
   only once he approves. In the app nothing can be saved, so he adds the
@@ -359,8 +379,8 @@ tests.py` checks the lookup, the bundled text and the app package.
 - A profile records whether the pastor is still living, so the skill uses the
   right tense ("Wilkerson taught" against "Evans teaches").
 
-Starting profiles (drafted 2026-10-11, facts checked against published sources,
-waiting for review) and where each is strongest:
+Starting profiles (drafted and checked against published sources 2026-10-11,
+reviewed the same day) and where each is strongest:
 
 | Pastor | Speaks most to |
 |---|---|
@@ -385,7 +405,7 @@ modern_rendering: true      # "in today's words" line under each quote
 nkjv_link: true
 tradition: Baptist          # e.g. Baptist, Reformed, Pentecostal, non-denominational
 crisis_region: US           # US, CA, UK, IE, AU, or other
-pastors:                    # each needs a profile in pastors/
+pastors:                    # at least one, each approved at setup
   - Charles Spurgeon
   - Charles Stanley
   - Voddie Baucham
@@ -403,9 +423,10 @@ tone:
 
 ### Setup questions
 
-Setup asks these on the first run, or on `/armor setup`: tradition, pastors
-(the starting profiles offered by name, others welcome), the crisis-line
-region, then the tone questions. Translation isn't asked while the KJV is the
+Setup asks these on the first run, or on `/armor setup`: tradition; pastors
+(the reviewed starting profiles offered by name, others welcome, then each
+chosen pastor's profile shown for approval, one at a time); the crisis-line
+region; then the tone questions. Translation isn't asked while the KJV is the
 only one bundled. Each tone question has one short line saying why it is
 asked, so the user knows what they are choosing:
 
@@ -434,6 +455,19 @@ should take with a man who is struggling.
 
 ## Open
 
+- **Listing in Anthropic's directory.** The plugin passes `claude plugin
+  validate`. Next, in the developer portal (claude.ai/directory/manage): Submit
+  new, Plugin bundle, this repository, Validate (it works while the repository
+  is private, with the Claude GitHub App installed); answer the data-handling
+  questions (armor stores no personal data beyond setup's answers, sends
+  nothing to any other service, keeps nothing about conversations, and isn't
+  meant for people under 18) and the compliance step; submit. The repository
+  must be public before the listing goes live. The name `armor` may be held as
+  generic or found taken; the fallback is `armor-of-god`, settled before the
+  first publish, since a plugin's name is permanent.
+- **Settings after a plugin update.** A plugin installed in Claude Code is
+  replaced when it updates, and settings saved in its folder may go with it;
+  consider Claude Code's per-plugin data folder.
 - **Voice.** For many men, hearing the Word and sermons helps more than
   reading it. Explore reading replies aloud in a way that also works on the
   phone; check first what the Claude app's own voice features already do.
@@ -442,16 +476,14 @@ should take with a man who is struggling.
   fall) to check tone, accuracy and safety before sharing. First test,
   2026-10-11, in the app on a computer: `/armor` started the skill and the menu
   was skipped as designed; the folder guess, the skipped follow-up and the
-  too-literal rendering were fixed afterwards. Still to test: the phone.
+  too-literal rendering were fixed afterwards. Setup then ran in the app and
+  saved; pasting the settings line was the awkward part, so the owner's
+  answers were built into his ZIP. Still to test: the phone.
 - **What `tradition` changes.** Nothing is defined yet. For a Baptist, one
   clear effect: a fall never puts his salvation in doubt (eternal security),
   which shapes every "after a fall" reply.
-- **Review the pastor profiles.** Read the six drafts in `pastors/`, correct
-  them, and mark each `reviewed: true`. Passages each one preached on can be
-  added where known.
-- **Going public.** The repo stays private until version 1 has been tested on
-  a phone. The license is MIT, chosen so anyone can reuse armor freely,
-  accepting that others may also sell it or change it.
+- **Going public.** The license is MIT, chosen so anyone can reuse armor
+  freely, accepting that others may also sell it or change it.
 
 ## Set aside
 

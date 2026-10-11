@@ -5,15 +5,15 @@ and self-destruction. It meets you in the moment you're in and answers with
 Scripture, with what pastors you trust have taught, and with one next step you
 can take tonight. Named for the armor of God (Ephesians 6:10-18).
 
-> **Status: version 1, being tested.** Setup, the check-in, safety, Scripture,
-> From the Pulpit and the next step are built. The six starting pastor
-> profiles are drafted and waiting for review; From the Pulpit uses a pastor
-> only once his profile is approved. [DESIGN.md](DESIGN.md) has every decision
-> made so far.
+armor offers spiritual encouragement. It isn't therapy, counseling or medical
+advice, and it always points you to real people for those.
+
+> **Status: version 1, being tested.** [DESIGN.md](DESIGN.md) has every
+> decision made so far.
 
 ## What a reply looks like
 
-Every reply has the same parts:
+Every reply has the same three parts:
 
 - **Scripture.** The exact King James text, a plain "in today's words" line
   under it, and a link to the same passage in the NKJV:
@@ -24,9 +24,9 @@ Every reply has the same parts:
   > saves those who are crushed in spirit."
   > [Read in NKJV ↗](https://www.biblegateway.com/passage/?search=Psalm+34%3A18&version=NKJV)
 
-- **From the Pulpit.** What one of your pastors is known for teaching on
-  what you're facing, in his spirit but never in his voice, and only from a
-  profile you've approved.
+- **From the Pulpit.** What one of your pastors is known for teaching on what
+  you're facing, in his spirit but never in his voice, drawn only from a
+  profile you approved.
 - **Next step.** One thing to do in the next hour.
 
 It never shames you, and it never quotes Scripture from memory: every verse
@@ -34,29 +34,57 @@ comes from the Bible text bundled with the skill.
 
 ## Try it
 
-- `/armor` opens with "What's going on?" The first time, it asks a few setup
-  questions first.
+- `/armor` opens with "What's going on?" The first time, it walks you through
+  setup first.
 - `/armor I'm being tempted right now`
 - `/armor I messed up again last night and I feel like garbage`
 - `/armor I'm anxious about tomorrow and I can't sleep`
 - `/armor setup` changes your answers: your pastors, your church tradition,
   your crisis line, and how armor talks to you.
 
+## Setup
+
+The first time you type `/armor`, it asks:
+
+- your church tradition;
+- which pastors you trust. It offers six to start (Charles Spurgeon, Charles
+  Stanley, Voddie Baucham, Tony Evans, John Ramirez and David Wilkerson),
+  shows you each one's profile, and uses only the ones you approve. Name a
+  pastor who isn't on the list, and in Claude Code it drafts a profile for
+  you to approve the same way;
+- where you live, for the right crisis line;
+- six short questions on how it should talk to you.
+
+If your first message is about something hard, it helps you first and offers
+setup at the end.
+
 ## Install
 
 ### Claude Code
 
 ```sh
-git clone https://github.com/David-Portillo/armor ~/.claude/skills/armor
+/plugin install armor --marketplace David-Portillo/armor
 ```
 
-Start a new Claude Code session and type `/armor`. The first time it looks up a
-verse, Claude Code asks permission to run `verse.py`; choose the option that
-stops it asking again, so a prompt never interrupts you in a hard moment.
+Then type `/armor` (as a plugin skill it may show as `/armor:armor`). The
+first time it looks up a verse, Claude Code asks permission to run `verse.py`;
+choose the option that stops it asking again, so a prompt never interrupts you
+in a hard moment.
+
+To work on armor itself, clone the repository and link the skill folder:
+
+```sh
+git clone https://github.com/David-Portillo/armor
+ln -s "$PWD/armor/skills/armor" ~/.claude/skills/armor
+```
+
+Your answers from setup are saved in `skills/armor/settings.yaml`, and the
+profiles you add in `skills/armor/my-pastors/`. Git ignores both, so pulling
+updates never overwrites them.
 
 ### The Claude app (web, desktop and phone)
 
-1. On a computer with a copy of this repo, build the upload:
+1. On a computer with a copy of this repository, build the upload:
 
    ```sh
    python3 package.py      # writes dist/armor.zip
@@ -67,33 +95,26 @@ stops it asking again, so a prompt never interrupts you in a hard moment.
    skill → Upload a skill** and choose `dist/armor.zip`.
 3. In any chat, including on your phone, type `/armor`.
 
-Rebuild and upload again after any change. Anthropic's help pages don't yet
-say whether custom skills work in the iOS and Android apps; we're testing that
-now.
+The app keeps nothing between chats, so there are two ways to keep your setup
+answers:
 
-### Setup and settings
+- Run setup in Claude Code first; the ZIP then carries your answers and
+  profiles, with nothing to paste.
+- Or run setup in the app. It ends with one line in a copy box; paste it into
+  Claude's Settings, in the box "What personal preferences should Claude
+  consider in responses?", and every new chat picks it up.
 
-The first time you type `/armor`, it asks which pastors you trust, your church
-tradition, where you live (for the right crisis line) and how it should talk to
-you. In Claude Code it saves your answers to `settings.yaml`, and it can draft
-a profile for a pastor who isn't in the starting six, for you to approve. Git
-ignores your settings and your own profiles, so pulling updates never
-overwrites them. `settings.example.yaml` holds the defaults.
-
-The Claude app can't keep anything between chats. To take your answers to
-your phone, run setup in Claude Code first, then build and upload the ZIP.
-Without that, setup in the app gives you one line to paste into your Claude
-profile preferences, where armor finds it in every chat.
+Rebuild and upload again after any change.
 
 ## What armor does with what you tell it
 
-armor sends nothing anywhere itself: it makes no network calls, and it
-runs only `verse.py`, which reads the Bible text and the pastor profiles bundled
-with it. The only things it saves are your setup answers and pastor profiles
-you approve, in its own folder. It never writes anything about your
-conversations, to memory or anywhere else. (`bible/build.py`, a maintainer
-tool that is not part of the skill, downloads the KJV from eBible.org when the
-bundled text is rebuilt.)
+armor sends nothing anywhere itself: it makes no network calls, and the only
+program it runs is `verse.py`, which reads the Bible text and the pastor
+profiles bundled with it. The only things it saves are your setup answers and
+the pastor profiles you approve, in its own folder. It never writes anything
+about your conversations, to memory or anywhere else. (`tools/build_bible.py`,
+a maintainer tool that isn't part of the skill, downloads the KJV from
+eBible.org when the bundled text is rebuilt.)
 
 ## If you're in crisis
 
@@ -119,14 +140,23 @@ If you're in immediate danger, call your local emergency number.
   publicly known to teach. It is not affiliated with or endorsed by any pastor
   or ministry it names.
 
+## Support
+
+Questions, corrections to a pastor's profile, or problems:
+[open an issue](https://github.com/David-Portillo/armor/issues).
+
 ## Development
 
 ```sh
-python3 tests.py          # the lookup, the bundled text and the app package
-python3 bible/build.py    # rebuild bible/kjv.txt from eBible.org
-python3 verse.py "Psalm 34:18" "Heb 4:15-16"
-python3 package.py        # build dist/armor.zip for the Claude app
+python3 tests.py                  # lookup, Bible text, setup, profiles, package, directory checks
+python3 tools/build_bible.py      # rebuild skills/armor/bible/kjv/ from eBible.org
+python3 skills/armor/verse.py "Psalm 34:18" "Heb 4:15-16"
+python3 package.py                # build dist/armor.zip for the Claude app
+claude plugin validate .          # check the plugin and marketplace manifests
 ```
+
+The plugin is the repository root: `.claude-plugin/` holds the manifest and
+the marketplace file, and `skills/armor/` is the skill itself.
 
 ## License
 

@@ -1,0 +1,15 @@
+{
+  "name": "armor",
+  "description": "armor, a Claude skill of Scripture and pastors' teaching for Christian men in hard moments.",
+  "owner": {
+    "name": "David Portillo",
+    "url": "https://github.com/David-Portillo"
+  },
+  "plugins": [
+    {
+      "name": "armor",
+      "source": "./",
+      "description": "Scripture-based encouragement for Christian men in hard moments: exact KJV verses with a plain modern rendering and NKJV links, what the pastors you trust taught, and one next step."
+    }
+  ]
+}
