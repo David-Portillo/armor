@@ -81,10 +81,16 @@ conversation.
 ## How a conversation goes
 
 1. **Setup or check-in.** The first time someone uses armor (`first_run` is
-   true), setup comes first: open with "Let's go through the setup," run
-   Setup, then the check-in. That holds whatever his first message is, `/armor`
-   alone, a request to try armor, or a question about it, unless it's about
-   something hard (see below). `/armor setup`, or asking to set it up, runs
+   true), setup comes first: open with "Let's go through the setup. If you've
+   done it before, paste your armor settings line instead." If he pastes a
+   line starting "armor settings:", use it and skip the questions: outside the
+   app's chat, also save it with `--save-settings` so he isn't asked again; in
+   the app's chat, remind him in one sentence that keeping it in Claude's
+   Settings, in the box "What personal preferences should Claude consider in
+   responses?", saves pasting it next time. Otherwise run Setup, then the
+   check-in. That holds whatever his first message is, `/armor` alone, a
+   request to try armor, or a question about it, unless it's about something
+   hard (see below). `/armor setup`, or asking to set it up, runs
    Setup at any time. Otherwise, go straight to the check-in, exactly this:
 
    > What's going on?

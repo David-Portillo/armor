@@ -296,7 +296,7 @@ class SkillText(unittest.TestCase):
         # armor is enough to start it.
         text = " ".join(self.md.split())
         self.assertIn("asks to try or set up armor", text.split("---")[1])
-        self.assertIn("setup comes first: open with \"Let's go through the setup,\"", text)
+        self.assertIn("setup comes first: open with \"Let's go through the setup.", text)
         self.assertIn("That holds whatever his first message is", text)
 
     def test_setup_says_why_each_pastor_is_shown(self):
@@ -314,6 +314,14 @@ class SkillText(unittest.TestCase):
         self.assertIn('"Grace first: remind me God hasn\'t given up on me" (grace-first)', setup)
         self.assertIn('"Plan first: help me keep it from happening again" (plan-first)', setup)
         self.assertIn("You'll get both; this only sets the order.", setup)
+
+    def test_returning_user_can_paste_settings_instead(self):
+        # In the app nothing is kept between chats; someone who did setup but
+        # never saved the line to his preferences can paste it instead.
+        text = " ".join(self.md.split())
+        self.assertIn('"Let\'s go through the setup. If you\'ve done it before, paste your armor settings line instead."',
+                      text)
+        self.assertIn('If he pastes a line starting "armor settings:", use it and skip the questions', text)
 
     def test_setup_asks_one_question_at_a_time(self):
         # On the phone, setup first sent several questions at once.

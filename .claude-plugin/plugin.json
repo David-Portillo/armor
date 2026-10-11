@@ -1,7 +1,7 @@
 {
   "name": "armor",
   "displayName": "armor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Scripture-based encouragement for Christian men in hard moments (lust, depression, frustration, fear, self-destruction): exact KJV verses with a plain modern rendering and NKJV links, what the pastors you trust taught, and one next step. Start with /armor setup.",
   "author": {
     "name": "David Portillo",
@@ -10,5 +10,12 @@
   "homepage": "https://github.com/David-Portillo/armor",
   "repository": "https://github.com/David-Portillo/armor",
   "license": "MIT",
-  "keywords": ["bible", "scripture", "kjv", "christian", "encouragement", "devotional"]
+  "keywords": [
+    "bible",
+    "scripture",
+    "kjv",
+    "christian",
+    "encouragement",
+    "devotional"
+  ]
 }

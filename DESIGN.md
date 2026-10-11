@@ -111,7 +111,11 @@ as `/armor:armor`.
    his own yet), armor opens with "Let's go through the setup" and runs it
    (see Setup questions), then the check-in, whatever the first message was:
    `/armor`, a request to try armor, or a question about it. `/armor setup`
-   runs it again anytime. A man who came with something hard is never made to
+   runs it again anytime. Since 1.0.1 the opening also says "If you've done
+   it before, paste your armor settings line instead": in the app nothing is
+   kept between chats, so someone who did setup but never saved the line to
+   his preferences was asked everything again; pasting it skips the
+   questions (and in Claude Code saves it). A man who came with something hard is never made to
    wait on setup: armor helps first with the defaults and offers setup once at
    the end. The check-in itself is an open
    question first; the list is only a fallback.
