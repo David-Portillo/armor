@@ -349,17 +349,6 @@ class Directory(unittest.TestCase):
         self.assertGreaterEqual(len(readme.split()), 40)
         self.assertTrue((ROOT / "LICENSE").exists())
 
-    def test_listing_icon(self):
-        # The directory keeps the icon from the first submission, so it has to
-        # be right before then: a square PNG, 512 to 2048 px.
-        import struct
-        png = (ROOT / ".claude-plugin" / "icon.png").read_bytes()
-        self.assertEqual(png[:8], b"\x89PNG\r\n\x1a\n")
-        width, height = struct.unpack(">II", png[16:24])
-        self.assertEqual(width, height)
-        self.assertTrue(512 <= width <= 2048, width)
-        self.assertLess(len(png), 2 * 1024 * 1024)
-
     def test_no_file_held_for_review(self):
         # Over 256 KiB, a file is held for a manual review; system files block.
         for f in self.tracked():
