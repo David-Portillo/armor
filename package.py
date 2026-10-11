@@ -18,8 +18,13 @@ ${CLAUDE_SKILL_DIR}. So this copy:
   verse.py by itself (see LOOKUP). SKILL.md may use ${CLAUDE_SKILL_DIR} only in
   those commands, so nothing else depends on knowing the folder;
 - carries only what the skill needs when it runs: SKILL.md, verse.py, the KJV
-  text, the settings, any pastor profiles, and the license. The design notes,
-  README, tests and build scripts stay out.
+  text, the settings, the pastor profiles (bundled and the user's own), and the
+  license. The design notes, README, tests and build scripts stay out;
+- adds an empty .app-copy marker, so verse.py knows nothing it saves will last.
+
+Run setup in Claude Code before packaging: the ZIP carries settings.yaml and
+any approved profiles in my-pastors/, which is how your answers reach your
+phone.
 """
 import argparse
 import os
@@ -85,9 +90,14 @@ def files():
     if not settings.exists():
         settings = HERE / "settings.example.yaml"
     yield settings.name, settings.read_bytes()
-    pastors = HERE / "pastors"
-    for p in sorted(pastors.glob("*.md")) if pastors.is_dir() else []:
-        yield f"pastors/{p.name}", p.read_bytes()
+    # Bundled profiles and the user's own; verse.py reads both folders.
+    for folder in ("pastors", "my-pastors"):
+        d = HERE / folder
+        for p in sorted(d.glob("*.md")) if d.is_dir() else []:
+            yield f"{folder}/{p.name}", p.read_bytes()
+    # Tells verse.py it is the app copy, where nothing written is kept
+    # between chats, so setup hands over its answers instead of saving them.
+    yield ".app-copy", b""
 
 
 def main():

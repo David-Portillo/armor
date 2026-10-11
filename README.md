@@ -5,9 +5,10 @@ and self-destruction. It meets you in the moment you're in and answers with
 Scripture, with what pastors you trust have taught, and with one next step you
 can take tonight. Named for the armor of God (Ephesians 6:10-18).
 
-> **Status: version 1, being tested.** The check-in, safety, Scripture and the
-> next step work. From the Pulpit (pastors' teaching) comes next, once each
-> pastor's profile has been reviewed. [DESIGN.md](DESIGN.md) has every decision
+> **Status: version 1, being tested.** Setup, the check-in, safety, Scripture,
+> From the Pulpit and the next step are built. The six starting pastor
+> profiles are drafted and waiting for review; From the Pulpit uses a pastor
+> only once his profile is approved. [DESIGN.md](DESIGN.md) has every decision
 > made so far.
 
 ## What a reply looks like
@@ -23,12 +24,23 @@ Every reply has the same parts:
   > saves those who are crushed in spirit."
   > [Read in NKJV ↗](https://www.biblegateway.com/passage/?search=Psalm+34%3A18&version=NKJV)
 
-- **From the Pulpit.** What a pastor from your list is known for teaching on
-  what you're facing, in his spirit but never in his voice. *(Coming next.)*
+- **From the Pulpit.** What one of your pastors is known for teaching on
+  what you're facing, in his spirit but never in his voice, and only from a
+  profile you've approved.
 - **Next step.** One thing to do in the next hour.
 
 It never shames you, and it never quotes Scripture from memory: every verse
 comes from the Bible text bundled with the skill.
+
+## Try it
+
+- `/armor` opens with "What's going on?" The first time, it asks a few setup
+  questions first.
+- `/armor I'm being tempted right now`
+- `/armor I messed up again last night and I feel like garbage`
+- `/armor I'm anxious about tomorrow and I can't sleep`
+- `/armor setup` changes your answers: your pastors, your church tradition,
+  your crisis line, and how armor talks to you.
 
 ## Install
 
@@ -59,12 +71,29 @@ Rebuild and upload again after any change. Anthropic's help pages don't yet
 say whether custom skills work in the iOS and Android apps; we're testing that
 now.
 
-### Settings
+### Setup and settings
 
-`settings.example.yaml` holds the defaults: tone, pastors, crisis line region.
-To change them, copy it to `settings.yaml` and edit the copy. Git ignores
-`settings.yaml`, so pulling updates never overwrites it. For the app, rebuild
-and upload again.
+The first time you type `/armor`, it asks which pastors you trust, your church
+tradition, where you live (for the right crisis line) and how it should talk to
+you. In Claude Code it saves your answers to `settings.yaml`, and it can draft
+a profile for a pastor who isn't in the starting six, for you to approve. Git
+ignores your settings and your own profiles, so pulling updates never
+overwrites them. `settings.example.yaml` holds the defaults.
+
+The Claude app can't keep anything between chats. To take your answers to
+your phone, run setup in Claude Code first, then build and upload the ZIP.
+Without that, setup in the app gives you one line to paste into your Claude
+profile preferences, where armor finds it in every chat.
+
+## What armor does with what you tell it
+
+armor sends nothing anywhere itself: it makes no network calls, and it
+runs only `verse.py`, which reads the Bible text and the pastor profiles bundled
+with it. The only things it saves are your setup answers and pastor profiles
+you approve, in its own folder. It never writes anything about your
+conversations, to memory or anywhere else. (`bible/build.py`, a maintainer
+tool that is not part of the skill, downloads the KJV from eBible.org when the
+bundled text is rebuilt.)
 
 ## If you're in crisis
 

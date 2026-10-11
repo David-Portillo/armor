@@ -4,3 +4,5 @@ settings.yaml
 dist/
 __pycache__/
 .DS_Store
+# Profiles a user adds for pastors of their own (setup drafts them).
+my-pastors/

@@ -7,6 +7,7 @@ relies on, not just the functions.
 """
 import json
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -136,6 +137,91 @@ class BundledText(unittest.TestCase):
 
 
 
+class SetupAndPastors(unittest.TestCase):
+    """Run in a scratch copy of the skill, so the real settings and the review
+    state of the real profiles never matter."""
+
+    ANSWERS = {"tradition": "Baptist", "crisis_region": "US", "pastors": ["Charles Spurgeon"],
+               "tone": {"listen_or_act": "ask", "call_out": "ask", "length": "short",
+                        "voice": "friend-and-mentor", "delivery": "gentle", "after_a_fall": "grace-first"}}
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name) / "armor"
+        shutil.copytree(HERE, self.dir, ignore=shutil.ignore_patterns(
+            ".git", "dist", "__pycache__", "settings.yaml", "my-pastors", ".DS_Store"))
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def run_verse(self, *args):
+        p = subprocess.run([sys.executable, str(self.dir / "verse.py"), *args], capture_output=True, text=True)
+        return p.returncode, json.loads(p.stdout)
+
+    def set_reviewed(self, file, reviewed):
+        f = self.dir / file
+        f.write_text(re.sub(r"reviewed: \w+", f"reviewed: {str(reviewed).lower()}", f.read_text()))
+
+    def test_first_run_until_setup_saves(self):
+        code, out = self.run_verse("--settings")
+        self.assertTrue(out["first_run"])
+        self.assertTrue(out["persistent"])
+        code, saved = self.run_verse("--save-settings", json.dumps(self.ANSWERS))
+        self.assertEqual(code, 0, saved)
+        self.assertTrue(saved["line"].startswith("armor settings: tradition Baptist; crisis line US; "
+                                                 "pastors Charles Spurgeon;"))
+        code, out = self.run_verse("--settings")
+        self.assertFalse(out["first_run"])
+        self.assertEqual(out["settings_file"], "settings.yaml")
+        self.assertIn('- "Charles Spurgeon"', out["settings"])
+
+    def test_bad_answers_are_refused_and_nothing_is_saved(self):
+        bad = dict(self.ANSWERS, crisis_region="Mars", tone=dict(self.ANSWERS["tone"], voice="robot"))
+        code, out = self.run_verse("--save-settings", json.dumps(bad))
+        self.assertEqual(code, 1)
+        self.assertIn("crisis_region", out["errors"][0])
+        self.assertIn("tone.voice", out["errors"][0])
+        self.assertFalse((self.dir / "settings.yaml").exists())
+
+    def test_profiles_are_listed_with_their_review_state(self):
+        self.set_reviewed("pastors/charles-spurgeon.md", True)
+        self.set_reviewed("pastors/david-wilkerson.md", False)
+        out = self.run_verse("--settings")[1]
+        state = {p["name"]: p["reviewed"] for p in out["profiles"]}
+        self.assertTrue(state["Charles Spurgeon"])
+        self.assertFalse(state["David Wilkerson"])
+        self.assertEqual(len(state), 6)
+
+    def test_unreviewed_profile_never_reaches_from_the_pulpit(self):
+        self.set_reviewed("pastors/david-wilkerson.md", False)
+        code, out = self.run_verse("--pastor", "David Wilkerson", "Psalm 34:18")
+        self.assertEqual(code, 1)
+        self.assertNotIn("pastor", out)
+        self.assertIn("hasn't been reviewed", out["errors"][0])
+        self.assertEqual(len(out["results"]), 1)  # the verses still come back
+
+    def test_reviewed_profile_is_returned_by_full_or_partial_name(self):
+        self.set_reviewed("pastors/charles-spurgeon.md", True)
+        for name in ["Charles Spurgeon", "spurgeon"]:
+            code, out = self.run_verse("--pastor", name)
+            self.assertEqual(code, 0, out)
+            self.assertEqual(out["pastor"]["name"], "Charles Spurgeon")
+            self.assertFalse(out["pastor"]["living"])
+            self.assertIn("Fainting Fits", out["pastor"]["profile"])
+
+    def test_a_users_own_pastor_profile_is_read(self):
+        (self.dir / "my-pastors").mkdir()
+        (self.dir / "my-pastors" / "paul-washer.md").write_text(
+            "---\nname: Paul Washer\nliving: true\nreviewed: true\nspeaks_to: repentance\n---\n# Paul Washer\n")
+        self.assertIn("Paul Washer", [p["name"] for p in self.run_verse("--settings")[1]["profiles"]])
+        self.assertEqual(self.run_verse("--pastor", "Paul Washer")[1]["pastor"]["name"], "Paul Washer")
+
+    def test_app_copy_knows_nothing_it_saves_will_last(self):
+        (self.dir / ".app-copy").touch()
+        self.assertFalse(self.run_verse("--settings")[1]["persistent"])
+        self.assertFalse(self.run_verse("--save-settings", json.dumps(self.ANSWERS))[1]["persistent"])
+
+
 class Package(unittest.TestCase):
     """The ZIP uploaded to the Claude app (see package.py)."""
 
@@ -162,6 +248,9 @@ class Package(unittest.TestCase):
         self.assertTrue({"settings.yaml", "settings.example.yaml"} & names)
         for left_out in ["DESIGN.md", "README.md", "tests.py", "package.py", "bible/build.py"]:
             self.assertNotIn(left_out, names)
+        self.assertIn(".app-copy", names)
+        self.assertEqual(sum(n.startswith("pastors/") for n in names),
+                         len(list((HERE / "pastors").glob("*.md"))))
 
     def test_frontmatter_the_app_accepts(self):
         md = self.zip.read("armor/SKILL.md").decode("utf-8")

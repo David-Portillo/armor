@@ -7,10 +7,11 @@ next step. It runs in Claude Code and in the Claude app, including on a phone.
 
 Named for Ephesians 6:10-18, the armor of God.
 
-Status: version 1 built and being tested: SKILL.md (check-in, safety,
-Scripture, next step), the verse lookup and the packaging for the app. Not
-built yet: the pastor profiles (From the Pulpit) and the first-run setup. Not
-yet tried on a phone.
+Status: version 1 built and being tested: SKILL.md (setup, check-in, safety,
+Scripture, From the Pulpit, next step), the verse lookup and the packaging for
+the app. The six starting pastor profiles are drafted and waiting for review;
+until a profile is approved, From the Pulpit leaves that pastor out. Not yet
+tried on a phone.
 
 ## Posture
 
@@ -69,8 +70,16 @@ the computer. What that requires:
   where the repo is linked, typing `/armor` runs the linked copy.
 - Settings live in the skill folder, because an uploaded skill has no home
   directory to save to. `settings.example.yaml` holds the defaults; a user's
-  own `settings.yaml` overrides it and is kept out of git. After a change the
-  ZIP is rebuilt and uploaded again.
+  own `settings.yaml`, written by setup, overrides it and is kept out of git,
+  as are the profiles he adds in `my-pastors/`.
+- The app keeps nothing between chats: every chat gets a fresh copy of the
+  skill. `package.py` marks the app copy with an empty `.app-copy` file, so
+  `verse.py` reports `persistent: false` there. To carry his answers to the
+  phone, a man runs setup once in Claude Code and then builds and uploads the
+  ZIP, which includes `settings.yaml` and his approved profiles. Someone who
+  can't do that (installing from the directory later, say) gets his settings
+  as one line, "armor settings: ...", to paste into his Claude profile
+  preferences, which the skill reads in every chat.
 
 ## Starting the skill
 
@@ -86,7 +95,12 @@ mentions struggling in an unrelated conversation.
 
 ## Session flow
 
-1. **Check-in.** Open question first; the list is only a fallback.
+1. **Setup or check-in.** The first time a man types plain `/armor` (no
+   settings of his own yet), setup comes first (see Setup questions), then
+   the check-in; `/armor setup` runs it again anytime. A man who came with
+   something hard is never made to wait on setup: armor helps first with the
+   defaults and offers setup once at the end. The check-in itself is an open
+   question first; the list is only a fallback.
 
    > What's going on?
    >
@@ -111,9 +125,8 @@ mentions struggling in an unrelated conversation.
 3. **Response** in clearly separated sections:
    - **Scripture**: the passage in the KJV, a plain "in today's words" line
      under it, and an NKJV link (see Sources).
-   - **From the Pulpit**: what a pastor from the configured list teaches on
-     this struggle (see Sources). Comes once the profiles are reviewed;
-     version 1 leaves it out.
+   - **From the Pulpit**: what one of his pastors taught on this struggle,
+     using only profiles he has reviewed (see Sources).
    - **Next step**: one thing to do in the next hour, not a program. It is
      something he can do alone (read a psalm aloud, pray, step outside).
      Reaching out to a person is offered as a suggestion, never assumed:
@@ -132,8 +145,7 @@ next step; one gentle question. Anything beyond that waits for "want more?"
 
 Moments map to response shapes. For example, "tempted right now" is short and
 urgent, and getting away from it comes first, in the follow-up reply. "After a
-fall" gives
-grace first, then the plan, if the settings ask for that order.
+fall" gives grace first, then the plan, if the settings ask for that order.
 
 ## Safety
 
@@ -197,7 +209,8 @@ What a man tells this skill is as private as anything he will ever type.
 - The skill writes nothing about the conversation: no memory files, no notes,
   no commits. This overrides any standing instruction to save memory. Memory
   outlives the conversation and can travel further than he expects (a memory
-  folder kept in git and pushed to a server, for one).
+  folder kept in git and pushed to a server, for one). The only things armor
+  saves are setup's answers and a pastor profile he has approved.
 - It never claims the conversation is unsaved. Claude Code keeps a local
   transcript of every session (under `~/.claude/projects/`), the app keeps
   its chat history, and messages go to Anthropic to be answered under the
@@ -209,14 +222,14 @@ A man who is tempted right now cannot wait on a slow reply. The lookup itself
 takes about 55 ms; what costs seconds is each tool round trip and each token
 the model reads. So:
 
-- The check-in needs no tool calls.
-- Settings come with the first lookup (`verse.py --settings`), once per
-  conversation.
-- Every reference in a reply is looked up in one `verse.py` call: one tool
-  call per reply, run as written, with nothing chained onto it. (In the first
-  app test Claude built a long chained command to read files, which failed.)
-  When From the Pulpit is built, the chosen pastor's profile should come
-  through the same call.
+- Settings come with the first reply's lookup (`verse.py --settings`), once
+  per conversation. A plain `/armor` needs that one quick call before the
+  check-in, to know whether setup comes first.
+- Every reference in a reply is looked up in one `verse.py` call, and the
+  chosen pastor's profile comes through the same call (`--pastor`): one tool
+  call per reply outside setup, run as written, with nothing chained onto it.
+  (In the first app test Claude built a long chained command to read files,
+  which failed.)
 - SKILL.md stays short. Setup, the moment guide and the pastor profiles live
   in separate files, read only when needed.
 - No permission prompt in a hard moment. In Claude Code, SKILL.md's
@@ -331,12 +344,23 @@ tests.py` checks the lookup, the bundled text and the app package.
 - Only teaching the pastor is actually known for. If no profile fits, or the
   model is not confident about a view, it picks another pastor rather than
   inventing one. No made-up direct quotes.
-- Adding a pastor means adding a profile. Setup can draft one for a new name;
-  the user reviews it before it is used.
+- Nothing about a real man reaches a reply until the user has read it. Each
+  profile has `reviewed: false` until he approves it, and `verse.py --pastor`
+  refuses an unreviewed profile, so From the Pulpit can't use it even by
+  mistake.
+- Adding a pastor means adding a profile. In Claude Code, setup drafts one for
+  a new name, shows it to him, and saves it in `my-pastors/` marked reviewed
+  only once he approves. In the app nothing can be saved, so he adds the
+  pastor from a computer.
+- A passage is attributed to a pastor only when his profile lists it under
+  passages he preached or wrote on, with how that's known. Where none is
+  confirmed, the profile says so, and any passage armor pairs with his
+  teaching is presented as armor's own choice.
 - A profile records whether the pastor is still living, so the skill uses the
   right tense ("Wilkerson taught" against "Evans teaches").
 
-Starting profiles and where each is strongest:
+Starting profiles (drafted 2026-10-11, facts checked against published sources,
+waiting for review) and where each is strongest:
 
 | Pastor | Speaks most to |
 |---|---|
@@ -350,8 +374,10 @@ Starting profiles and where each is strongest:
 ## Configuration
 
 Defaults in `settings.example.yaml`; a user's own `settings.yaml` in the
-skill folder overrides them (see Where it runs). Until the first-run setup is
-built, a user copies the example and edits it. The defaults:
+skill folder overrides them (see Where it runs). Setup writes it with
+`verse.py --save-settings`, which refuses any answer outside the choices
+below, so a slip in the conversation can't leave a broken file. The
+defaults:
 
 ```yaml
 translation: KJV            # the only bundled text for now
@@ -377,9 +403,11 @@ tone:
 
 ### Setup questions
 
-Tradition, translation, pastors, then the tone questions. Each question has
-one short line saying why it is asked, so the user knows what they are
-choosing:
+Setup asks these on the first run, or on `/armor setup`: tradition, pastors
+(the starting profiles offered by name, others welcome), the crisis-line
+region, then the tone questions. Translation isn't asked while the KJV is the
+only one bundled. Each tone question has one short line saying why it is
+asked, so the user knows what they are choosing:
 
 1. **When you're hurting, should I listen first, or jump to what to do?**
    Some guys need to get it out before they can hear anything.
@@ -418,9 +446,9 @@ should take with a man who is struggling.
 - **What `tradition` changes.** Nothing is defined yet. For a Baptist, one
   clear effect: a fall never puts his salvation in doubt (eternal security),
   which shapes every "after a fall" reply.
-- **Pastor profiles.** Draft the six starting profiles for review, then put
-  From the Pulpit back into SKILL.md.
-- **First-run setup.** Ask the setup questions and write `settings.yaml`.
+- **Review the pastor profiles.** Read the six drafts in `pastors/`, correct
+  them, and mark each `reviewed: true`. Passages each one preached on can be
+  added where known.
 - **Going public.** The repo stays private until version 1 has been tested on
   a phone. The license is MIT, chosen so anyone can reuse armor freely,
   accepting that others may also sell it or change it.

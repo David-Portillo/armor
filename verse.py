@@ -11,13 +11,28 @@ bible/build.py).
     verse.py "Psalm 34:18" "Heb 4:15-16" "1 John 1:9" "Romans 8:28,38-39" "Psalm 23"
     verse.py --settings "Psalm 34:18"      # first reply: settings too
     verse.py --settings                    # settings alone
+    verse.py --pastor "Charles Spurgeon" "Psalm 42:11"
+    verse.py --save-settings '{"tradition": "Baptist", ...}'
 
 Pass every reference a reply needs in one call. Each call is a tool round trip
-for the skill, which costs far more time than the lookup itself. --settings
-adds the user's settings (settings.yaml, else settings.example.yaml) to the
-output as "settings_file" and "settings", so the first reply needs no separate
-read and the skill never has to work out where its folder is. (In the Claude
-app it guessed wrong once and the whole step failed.)
+for the skill, which costs far more time than the lookup itself. The other
+options ride along on that same call, so the skill never has to read files or
+work out where its folder is. (In the Claude app it guessed wrong once and the
+whole step failed.)
+
+--settings adds the user's settings (settings.yaml, else the defaults in
+settings.example.yaml) as "settings_file" and "settings"; "first_run", true
+until setup has saved a settings.yaml; "persistent", false in the app copy,
+where nothing is kept between chats; and "profiles", every pastor profile with
+its name, tense and whether the user has reviewed it.
+
+--pastor adds one pastor's profile as "pastor". Only a reviewed profile is
+returned: From the Pulpit says what a real man taught, so nothing reaches it
+until the user has checked it.
+
+--save-settings checks the answers from setup and writes settings.yaml. It
+prints the saved settings as one "line" the user can keep where the app
+copy can read it.
 
 Prints one line of JSON:
 
@@ -229,15 +244,125 @@ def resolve(code, chapter, spec, verses, titles, order, pos):
     return result
 
 
+# Bundled profiles, then the ones a user adds for pastors of their own.
+PASTOR_DIRS = ("pastors", "my-pastors")
+
+# The choices setup offers; anything else is refused before it is saved.
+REGIONS = ("US", "CA", "UK", "IE", "AU", "other")
+TONE = {
+    "listen_or_act": ("listen", "act", "ask"),
+    "call_out": ("say", "ask"),
+    "length": ("short", "long"),
+    "voice": ("friend", "mentor", "friend-and-mentor"),
+    "delivery": ("gentle", "straight"),
+    "after_a_fall": ("grace-first", "plan-first"),
+}
+
+
+def persistent():
+    # package.py marks the app copy, because the app gives every chat a fresh
+    # copy of the skill: a file saved there is gone by the next chat.
+    return not (HERE / ".app-copy").exists()
+
+
+def split_frontmatter(text):
+    m = re.match(r"---\n(.*?)\n---\n", text, re.S)
+    if not m:
+        return {}, text
+    meta = {}
+    for line in m[1].splitlines():
+        key, sep, value = line.partition(":")
+        if sep:
+            meta[key.strip()] = value.strip()
+    return meta, text[m.end():]
+
+
+def profiles():
+    found = []
+    for folder in PASTOR_DIRS:
+        d = HERE / folder
+        for f in sorted(d.glob("*.md")) if d.is_dir() else []:
+            meta, body = split_frontmatter(f.read_text(encoding="utf-8"))
+            found.append({"name": meta.get("name", f.stem), "living": meta.get("living") == "true",
+                          "reviewed": meta.get("reviewed") == "true", "speaks_to": meta.get("speaks_to", ""),
+                          "body": body.strip()})
+    return found
+
+
+def find_pastor(name):
+    """Match a full name, or any unique part of one ("Spurgeon")."""
+    want = re.sub(r"[^a-z ]", "", name.lower()).strip()
+    every = profiles()
+    exact = [p for p in every if re.sub(r"[^a-z ]", "", p["name"].lower()) == want]
+    if exact:
+        return exact[0]
+    partial = [p for p in every if want and want in re.sub(r"[^a-z ]", "", p["name"].lower())]
+    if len(partial) == 1:
+        return partial[0]
+    raise ValueError(f"no single pastor profile matches '{name}'")
+
+
+def save_settings(raw):
+    try:
+        s = json.loads(raw)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"--save-settings needs JSON: {e}")
+    if not isinstance(s, dict):
+        raise ValueError("--save-settings needs a JSON object")
+    tradition, region, pastors, tone = s.get("tradition"), s.get("crisis_region"), s.get("pastors"), s.get("tone")
+    problems = []
+    if not isinstance(tradition, str) or not tradition.strip():
+        problems.append("tradition must be a name")
+    if region not in REGIONS:
+        problems.append(f"crisis_region must be one of {', '.join(REGIONS)}")
+    if not isinstance(pastors, list) or not all(isinstance(n, str) and n.strip() for n in pastors):
+        problems.append("pastors must be a list of names")
+    if not isinstance(tone, dict):
+        tone = {}
+    for key, choices in TONE.items():
+        if tone.get(key) not in choices:
+            problems.append(f"tone.{key} must be one of {', '.join(choices)}")
+    if problems:
+        raise ValueError("; ".join(problems))
+
+    names = [n.strip() for n in pastors]
+    text = "\n".join([
+        "# Saved by armor's setup. Run /armor setup to change it, or edit it by hand.",
+        "translation: KJV",
+        "modern_rendering: true",
+        "nkjv_link: true",
+        f"tradition: {json.dumps(tradition.strip(), ensure_ascii=False)}",
+        f"crisis_region: {region}",
+        "pastors:" + ("" if names else " []"),
+        *[f"  - {json.dumps(n, ensure_ascii=False)}" for n in names],
+        "tone:",
+        *[f"  {key}: {tone[key]}" for key in TONE],
+    ]) + "\n"
+    (HERE / "settings.yaml").write_text(text, encoding="utf-8")
+    line = (f"armor settings: tradition {tradition.strip()}; crisis line {region}; "
+            f"pastors {', '.join(names) or 'none'}; " + "; ".join(f"{k} {tone[k]}" for k in TONE))
+    return {"saved": "settings.yaml", "persistent": persistent(), "line": line}
+
+
 def main():
     p = argparse.ArgumentParser(description="Look up verses in the bundled Bible text.")
     p.add_argument("refs", nargs="*", help='e.g. "Psalm 34:18" "Heb 4:15-16"')
     p.add_argument("--settings", action="store_true",
-                   help="also return the settings (settings.yaml, else settings.example.yaml)")
+                   help="also return the settings, first_run, persistent and the pastor profiles")
+    p.add_argument("--pastor", metavar="NAME", help="also return this pastor's reviewed profile")
+    p.add_argument("--save-settings", metavar="JSON", help="save the answers from setup to settings.yaml")
     p.add_argument("--translation", default="kjv", help="bundled text to read (default: kjv)")
     args = p.parse_args()
-    if not args.refs and not args.settings:
-        p.error("give at least one reference, or --settings")
+
+    if args.save_settings is not None:
+        try:
+            print(json.dumps(save_settings(args.save_settings), ensure_ascii=False))
+        except ValueError as e:
+            print(json.dumps({"errors": [str(e)]}, ensure_ascii=False))
+            sys.exit(1)
+        return
+    if not args.refs and not args.settings and not args.pastor:
+        p.error("give at least one reference, --settings or --pastor")
     out = {"translation": args.translation.upper(), "results": [], "errors": []}
 
     if args.settings:
@@ -248,6 +373,18 @@ def main():
                 break
         else:
             out["errors"].append("no settings.yaml or settings.example.yaml next to verse.py")
+        out["first_run"] = not (HERE / "settings.yaml").exists()
+        out["persistent"] = persistent()
+        out["profiles"] = [{k: v for k, v in pr.items() if k != "body"} for pr in profiles()]
+
+    if args.pastor:
+        try:
+            pr = find_pastor(args.pastor)
+            if not pr["reviewed"]:
+                raise ValueError(f"{pr['name']}'s profile hasn't been reviewed yet, so From the Pulpit can't use it")
+            out["pastor"] = {"name": pr["name"], "living": pr["living"], "profile": pr["body"]}
+        except ValueError as e:
+            out["errors"].append(str(e))
 
     # The translation name becomes a file path, so it may only name a file
     # in bible/.
