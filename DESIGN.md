@@ -142,12 +142,12 @@ as `/armor:armor`.
    and a short From the Pulpit, and the question comes last. (On the phone
    this reply first came with the pastor but no verses.) If the settings say "depends on the
    day," it also asks whether he wants to be heard or helped.
-3. **Response**, every time in the same three sections:
+3. **Response**, every time in the same sections:
    - **Scripture**: the passage in the KJV, a plain "in today's words" line
      under it, and an NKJV link (see Sources).
    - **From the Pulpit**: what each of the pastors he approved taught on this
-     struggle, every one whose teaching applies (see Sources). Every response
-     includes it.
+     struggle, every one whose teaching applies (see Sources). In every
+     response when he has pastors; with none, the section isn't there.
    - **Next step**: one thing to do in the next hour, not a program. It is
      something he can do alone (read a psalm aloud, pray, step outside).
      Reaching out to a person is offered as a suggestion, never assumed:
@@ -392,11 +392,12 @@ and what the directory checks.
   out (each profile lists what he `speaks_to`); if none applies directly, the
   one whose teaching comes closest, connected honestly. The `pulpit` setting chooses
   between this and only the best-fitting pastor (setup asks; the default is
-  every pastor who applies). If none of his pastors has a profile it can
-  use, the reviewed starting pastors stand in,
-  and armor tells him once that `/armor setup` lets him choose. (Changed
-  2026-10-11 from one pastor per reply: the tester wanted all of his
-  pastors' points of view.)
+  every pastor who applies). Only his own approved pastors ever speak: if he
+  chose none, or none of his has a profile armor can use, the section is
+  left out entirely, with no heading and no stand-in. (Changed 2026-10-11
+  from one pastor per reply, because the tester wanted all of his pastors'
+  points of view; and in 1.0.1 from "the starting pastors stand in", because
+  he wanted From the Pulpit to come only from pastors he selected.)
 - Each pastor has a profile, `pastors/<name>.md`, holding what he is actually
   known for: recurring themes, the passages he leans on, his voice, and the
   struggles he speaks to most strongly.
@@ -417,13 +418,11 @@ and what the directory checks.
     one at a time (who he is, what he's known for teaching, what he says to
     the struggles armor meets), and asks "Is this an accurate picture of
     him?": yes, something's off, or leave him out. It saves only the ones he
-    approves. If something's off, armor (in Claude Code) rewrites the profile
-    with his correction and, once he approves it, saves it in `my-pastors/`,
-    where it replaces the starting profile for him; in the app it leaves that
-    pastor out and points him to a computer or the project's issues. The
-    tester asked for the "why" after seeing profiles with no reason given. He needs at least one, since
-    every response includes From the Pulpit; `verse.py --save-settings`
-    refuses an empty list.
+    approves, and approving none is fine. If something's off, armor rewrites
+    the profile with his correction and saves it once he approves, the same
+    way as a pastor he adds (below); it replaces the starting profile for
+    him. The tester asked for the "why" after seeing profiles with no reason
+    given.
 - Adding a pastor means adding a profile, written on the spot in setup
   wherever he is, shown with the same accuracy question, and saved with
   `verse.py --save-pastor` only once he approves (in `my-pastors/`, marked
@@ -466,15 +465,9 @@ defaults:
 translation: KJV            # the only bundled text for now
 modern_rendering: true      # "in today's words" line under each quote
 nkjv_link: true
-tradition: Baptist          # e.g. Baptist, Reformed, Pentecostal, non-denominational
+tradition: ""               # none until he chooses; from the list or his own words
 crisis_region: US           # US, CA, UK, IE, AU, or other
-pastors:                    # at least one, each approved at setup
-  - Charles Spurgeon
-  - Charles Stanley
-  - Voddie Baucham
-  - Tony Evans
-  - John Ramirez
-  - David Wilkerson
+pastors: []                 # none until he chooses; each approved at setup
 pulpit: all                 # all: every pastor whose teaching applies | one: only the best fit
 tone:
   listen_or_act: ask        # listen | act | ask
@@ -491,10 +484,16 @@ Setup asks these on the first run, or on `/armor setup`: tradition; pastors
 (the reviewed starting profiles offered by name, others welcome, then each
 chosen pastor's profile shown for approval, one at a time); whether From the
 Pulpit gives every pastor whose teaching applies or only the best fit
-(skipped when he approved just one); the crisis-line region; then the tone
+(asked only with two or more pastors); the crisis-line region; then the tone
 questions. Translation isn't asked while the KJV is the
-only one bundled. Ten questions in all, asked one per message, numbered ("2
-of 10"). On the phone, setup first sent several at once and went one at a time
+only one bundled. Up to ten questions, asked one per message, numbered ("2
+of 10"); a question that doesn't apply is counted out and the rest
+renumbered ("3 of 9"), and each question is checked against his earlier
+answers. A tradition he types is kept as given, and a skipped one means
+none; when it differs from the starting pastors' (Baptist, Pentecostal and
+other evangelical preachers), setup says so and invites his own. For a
+pastor Claude knows nothing true about (his own church's pastor, say), it
+asks him what that pastor teaches instead of guessing. On the phone, setup first sent several at once and went one at a time
 only when asked. The choices go wherever Claude can show them to tap (the
 Claude app slides them up in a drawer; Claude Code has its own question tool),
 and only become a typed numbered list where it can't; the same goes for

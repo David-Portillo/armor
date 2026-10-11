@@ -13,7 +13,7 @@ advice, and it always points you to real people for those.
 
 ## What a reply looks like
 
-Every reply has the same three parts:
+Every reply has the same parts:
 
 - **Scripture.** The exact King James text, a plain "in today's words" line
   under it, and a link to the same passage in the NKJV:
@@ -26,7 +26,8 @@ Every reply has the same three parts:
 
 - **From the Pulpit.** What each of your pastors is known for teaching on what
   you're facing, every one whose teaching applies, in his spirit but never in
-  his voice, drawn only from profiles you approved.
+  his voice, drawn only from profiles you approved. If you choose no pastors,
+  replies go without it.
 - **Next step.** One thing to do in the next hour.
 
 It never shames you, and it never quotes Scripture from memory: every verse
