@@ -387,9 +387,16 @@ and what the directory checks.
     has checked it against published sources, and `verse.py` never returns an
     unreviewed profile's text, so a draft can't reach a reply even by
     mistake.
-  - The user's own: setup shows each pastor he picks, one at a time (who he
-    is, what he's known for teaching, what he says to the struggles armor
-    meets), and saves only the ones he approves. He needs at least one, since
+  - The user's own: setup tells him why (armor never says anything in a
+    pastor's name that he hasn't checked), then shows each pastor he picks,
+    one at a time (who he is, what he's known for teaching, what he says to
+    the struggles armor meets), and asks "Is this an accurate picture of
+    him?": yes, something's off, or leave him out. It saves only the ones he
+    approves. If something's off, armor (in Claude Code) rewrites the profile
+    with his correction and, once he approves it, saves it in `my-pastors/`,
+    where it replaces the starting profile for him; in the app it leaves that
+    pastor out and points him to a computer or the project's issues. The
+    tester asked for the "why" after seeing profiles with no reason given. He needs at least one, since
     every response includes From the Pulpit; `verse.py --save-settings`
     refuses an empty list.
 - Adding a pastor means adding a profile. In Claude Code, setup drafts one for

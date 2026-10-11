@@ -278,15 +278,20 @@ def split_frontmatter(text):
 
 
 def profiles():
-    found = []
+    """Bundled profiles, then the user's own. A profile of his with the same
+    name as a bundled one replaces it: that is how setup keeps his correction
+    when he says a starting profile has something wrong."""
+    found = {}
     for folder in PASTOR_DIRS:
         d = HERE / folder
         for f in sorted(d.glob("*.md")) if d.is_dir() else []:
             meta, body = split_frontmatter(f.read_text(encoding="utf-8"))
-            found.append({"name": meta.get("name", f.stem), "living": meta.get("living") == "true",
-                          "reviewed": meta.get("reviewed") == "true", "speaks_to": meta.get("speaks_to", ""),
-                          "body": body.strip()})
-    return found
+            name = meta.get("name", f.stem)
+            found[re.sub(r"[^a-z ]", "", name.lower()).strip()] = {
+                "name": name, "living": meta.get("living") == "true",
+                "reviewed": meta.get("reviewed") == "true", "speaks_to": meta.get("speaks_to", ""),
+                "body": body.strip()}
+    return list(found.values())
 
 
 def find_pastor(name):

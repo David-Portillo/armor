@@ -169,25 +169,37 @@ choices to tap (the Claude app shows them in a drawer; Claude Code has its own
 question tool), ask every setup question with it: all nine, and each pastor's
 approval, one question per call, not just the first. The question and its
 choices go in the tool, not in your text; around it, a few words at most (a
-short thanks for his last answer). Only without such a tool, give the choices
-as a short numbered list, so he can answer with just a number. He can always answer in his own words instead.
-If he skips a question, keep the default for it (from `settings`) and go on;
-if he skips the pastors, keep the reviewed starting pastors and tell him
-`/armor setup` lets him choose later. Wait for his answer before the next
-question. Never put two questions in one
-message.
+short thanks for his last answer), except a pastor's profile, which you show
+in your message just above his approval question. Only without such a tool,
+give the choices as a short numbered list, so he can answer with just a
+number. He can always answer in his own words instead. If he skips a
+question, keep the default for it (from `settings`) and go on; if he skips the
+pastors, keep the reviewed starting pastors and tell him `/armor setup` lets
+him choose later. Wait for his answer before the next question. Never put two
+questions in one message.
 
 1. His church tradition: Baptist, Reformed, Pentecostal, non-denominational,
    or another.
 2. Which pastors he trusts. Offer the `reviewed` names in `profiles`, each
-   with what he speaks to, and invite others by name. Then take the ones he
-   picks one per message: show him who the pastor is, what he is known for
-   teaching and what he says to the struggles armor meets, all from that
-   pastor's `profile` text, and ask whether armor should draw on him (yes or
-   no, as choices to tap when you can). Only
-   the pastors he approves go in `pastors`, and he needs at least one,
-   because every response includes From the Pulpit. A pastor he names who has
-   no profile gets one drafted for the same approval (below).
+   with what he speaks to (he may pick several), and invite others by name.
+   Then tell him in a sentence why the next step matters: armor never says
+   anything in a pastor's name that he hasn't checked, so it will show him
+   what it knows about each one he picked. Take them one at a time: in your
+   message, show who the pastor is, what he is known for teaching and what he
+   says to the struggles armor meets, all from that pastor's `profile` text;
+   then ask, "Is this an accurate picture of <name>? armor will draw on it in
+   From the Pulpit," with the choices "Yes, use him", "Something's off" and
+   "Leave him out". Only the pastors he approves go in `pastors`, and he needs
+   at least one, because every response includes From the Pulpit. If
+   something's off, ask what. Outside the app's chat, write the profile again
+   with his correction (in the shape below, marked `reviewed: true`), show it
+   to him, and once he approves it save it as
+   `my-pastors/<first-last>.md` in the folder that holds verse.py; it replaces
+   the starting profile for him. In the app's chat nothing can be saved: leave
+   that pastor out for now, and tell him he can correct the profile from a
+   computer, or report it at github.com/David-Portillo/armor/issues so it's
+   fixed for everyone. A pastor he names who has no profile gets one drafted
+   for the same approval (below).
 3. Where he lives, for the right crisis line: US, Canada, UK, Ireland,
    Australia, or elsewhere.
 4. When you're hurting, should I listen first, jump to what to do, or ask you

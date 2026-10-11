@@ -240,6 +240,18 @@ class SetupAndPastors(unittest.TestCase):
         self.assertIn("at least one", out["errors"][0])
         self.assertFalse((self.dir / "settings.yaml").exists())
 
+    def test_a_users_correction_replaces_the_starting_profile(self):
+        # Setup asks whether each profile is accurate; a correction he
+        # approves is saved in my-pastors/ under the same name.
+        (self.dir / "my-pastors").mkdir()
+        (self.dir / "my-pastors" / "charles-spurgeon.md").write_text(
+            "---\nname: Charles Spurgeon\nliving: false\nreviewed: true\nspeaks_to: depression\n---\n"
+            "# Charles Spurgeon\nHis corrected profile.\n")
+        listed = [p for p in self.run_verse("--settings")[1]["profiles"] if p["name"] == "Charles Spurgeon"]
+        self.assertEqual(len(listed), 1)
+        self.assertIn("His corrected profile.", listed[0]["profile"])
+        self.assertIn("His corrected profile.", self.run_verse("--pastor", "Spurgeon")[1]["pastors"][0]["profile"])
+
     def test_a_users_own_pastor_profile_is_read(self):
         (self.dir / "my-pastors").mkdir()
         (self.dir / "my-pastors" / "paul-washer.md").write_text(
@@ -275,6 +287,12 @@ class SkillText(unittest.TestCase):
         self.assertIn("asks to try or set up armor", text.split("---")[1])
         self.assertIn("setup comes first: open with \"Let's go through the setup,\"", text)
         self.assertIn("That holds whatever his first message is", text)
+
+    def test_setup_says_why_each_pastor_is_shown(self):
+        text = " ".join(self.md.split())
+        self.assertIn("armor never says anything in a pastor's name that he hasn't checked", text)
+        self.assertIn('"Is this an accurate picture of <name>?', text)
+        self.assertIn('"Yes, use him", "Something\'s off" and "Leave him out"', text)
 
     def test_setup_asks_one_question_at_a_time(self):
         # On the phone, setup first sent several questions at once.
