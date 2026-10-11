@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+"""Build dist/armor.zip, the copy of armor to upload to the Claude app.
+
+    python3 package.py
+
+Then, in Claude in a browser or the desktop app: Customize > Skills > + >
+Create skill > Upload a skill, and choose dist/armor.zip. Re-run and upload
+again after any change, including a change to settings.yaml.
+
+Why the app gets its own copy: the app accepts only a few SKILL.md frontmatter
+keys and fails the upload on any other, and it doesn't fill in Claude Code's
+${CLAUDE_SKILL_DIR}. So this copy:
+
+- keeps only the frontmatter keys the app accepts. Claude Code's
+  disable-model-invocation and allowed-tools stay behind: in the app the
+  description itself limits the skill to /armor, and code runs without asking;
+- replaces ${CLAUDE_SKILL_DIR} with "<skill folder>" and says what that means;
+- carries only what the skill needs when it runs: SKILL.md, verse.py, the KJV
+  text, the settings, any pastor profiles, and the license. The design notes,
+  README, tests and build scripts stay out.
+"""
+import argparse
+import os
+import re
+import sys
+import zipfile
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+NAME = "armor"  # the app requires the folder in the ZIP to match the skill name
+APP_KEYS = {"name", "description", "license", "compatibility", "metadata"}
+NOTE = "In this copy, `<skill folder>` means the folder this SKILL.md is in.\n\n"
+
+
+def fail(msg):
+    sys.exit(f"package failed: {msg}")
+
+
+def app_skill_md():
+    text = (HERE / "SKILL.md").read_text(encoding="utf-8")
+    m = re.match(r"---\n(.*?)\n---\n", text, re.S)
+    if not m:
+        fail("SKILL.md has no frontmatter")
+    kept, key = [], None
+    for line in m[1].splitlines():
+        if line and not line[0].isspace():  # a new top-level key
+            key = line.split(":", 1)[0].strip()
+        if key in APP_KEYS:
+            kept.append(line)
+    body = text[m.end():].replace("${CLAUDE_SKILL_DIR}", "<skill folder>")
+    body, n = re.subn(r"^(# .*\n\n)", lambda h: h[1] + NOTE, body, count=1, flags=re.M)
+    if not n:
+        fail("SKILL.md body has no top-level heading to put the folder note under")
+    out = "---\n" + "\n".join(kept) + "\n---\n" + body
+
+    keys = {line.split(":", 1)[0] for line in kept if line and not line[0].isspace()}
+    if f"name: {NAME}" not in kept:
+        fail(f"frontmatter name must be '{NAME}' to match the folder in the ZIP")
+    if "description" not in keys:
+        fail("frontmatter has no description")
+    if "${CLAUDE_" in out or re.search(r"!`", out):
+        fail("a Claude Code-only feature is left in the app copy")
+    return out
+
+
+def files():
+    yield "SKILL.md", app_skill_md().encode("utf-8")
+    for rel in ["verse.py", "bible/kjv.txt", "LICENSE"]:
+        yield rel, (HERE / rel).read_bytes()
+    settings = HERE / "settings.yaml"
+    if not settings.exists():
+        settings = HERE / "settings.example.yaml"
+    yield settings.name, settings.read_bytes()
+    pastors = HERE / "pastors"
+    for p in sorted(pastors.glob("*.md")) if pastors.is_dir() else []:
+        yield f"pastors/{p.name}", p.read_bytes()
+
+
+def main():
+    p = argparse.ArgumentParser(description="Build the ZIP to upload to the Claude app.")
+    p.add_argument("--out", type=Path, default=HERE / "dist" / f"{NAME}.zip")
+    out = p.parse_args().out
+
+    out.parent.mkdir(parents=True, exist_ok=True)
+    tmp = out.with_suffix(".tmp")
+    names = []
+    with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as z:
+        for rel, data in files():
+            z.writestr(f"{NAME}/{rel}", data)
+            names.append(rel)
+    os.replace(tmp, out)
+    print(f"wrote {out} ({out.stat().st_size / 1e6:.2f} MB): {', '.join(names)}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,26 @@
+# armor settings. These are the defaults. To change them, copy this file to
+# settings.yaml in the same folder and edit that copy; settings.yaml is kept
+# out of git, so pulling updates never overwrites your choices. For the Claude
+# app, re-run package.py and upload the new ZIP after a change.
+
+translation: KJV            # the only bundled text for now
+modern_rendering: true      # "in today's words" line under each quote
+nkjv_link: true
+tradition: Baptist          # e.g. Baptist, Reformed, Pentecostal, non-denominational
+crisis_region: US           # US, CA, UK, IE, AU, or other
+
+pastors:                    # From the Pulpit uses those with a profile in pastors/
+  - Charles Spurgeon
+  - Charles Stanley
+  - Voddie Baucham
+  - Tony Evans
+  - John Ramirez
+  - David Wilkerson
+
+tone:
+  listen_or_act: ask        # listen | act | ask
+  call_out: ask             # say | ask
+  length: short             # short | long
+  voice: friend-and-mentor  # friend | mentor | friend-and-mentor
+  delivery: gentle          # gentle | straight
+  after_a_fall: grace-first # grace-first | plan-first

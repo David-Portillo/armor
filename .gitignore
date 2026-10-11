@@ -1,0 +1,5 @@
+# Each user's own settings; settings.example.yaml holds the shared defaults.
+settings.yaml
+# package.py output for the Claude app.
+dist/
+__pycache__/
