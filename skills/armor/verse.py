@@ -24,7 +24,9 @@ whole step failed.)
 --settings adds the user's settings (settings.yaml, else the defaults in
 settings.example.yaml) as "settings_file" and "settings"; "first_run", true
 until setup has saved a settings.yaml; and "profiles", every pastor profile
-with its name, tense and whether the user has reviewed it.
+with its name, tense and whether it has been reviewed, plus the text of each
+reviewed one. From the Pulpit is in every reply from the first one on, so the
+profiles come with that first lookup instead of costing another round.
 
 --pastor adds pastors' profiles as "pastors"; repeat it for several, as setup
 does when it shows each chosen pastor's profile for the user's approval. Only
@@ -374,7 +376,9 @@ def main():
         else:
             out["errors"].append("no settings.yaml or settings.example.yaml next to verse.py")
         out["first_run"] = not (HERE / "settings.yaml").exists()
-        out["profiles"] = [{k: v for k, v in pr.items() if k != "body"} for pr in profiles()]
+        # A draft's text stays out, so From the Pulpit can't use it.
+        out["profiles"] = [{**{k: v for k, v in pr.items() if k != "body"},
+                            **({"profile": pr["body"]} if pr["reviewed"] else {})} for pr in profiles()]
 
     if args.pastor:
         out["pastors"] = []

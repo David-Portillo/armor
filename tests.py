@@ -198,10 +198,14 @@ class SetupAndPastors(unittest.TestCase):
     def test_profiles_are_listed_with_their_review_state(self):
         self.set_reviewed("pastors/charles-spurgeon.md", True)
         self.set_reviewed("pastors/david-wilkerson.md", False)
-        state = {p["name"]: p["reviewed"] for p in self.run_verse("--settings")[1]["profiles"]}
-        self.assertTrue(state["Charles Spurgeon"])
-        self.assertFalse(state["David Wilkerson"])
-        self.assertEqual(len(state), 6)
+        listed = {p["name"]: p for p in self.run_verse("--settings")[1]["profiles"]}
+        self.assertTrue(listed["Charles Spurgeon"]["reviewed"])
+        self.assertFalse(listed["David Wilkerson"]["reviewed"])
+        self.assertEqual(len(listed), 6)
+        # The first lookup carries each reviewed profile's text, so From the
+        # Pulpit is ready from the first reply; a draft's text stays out.
+        self.assertIn("Fainting Fits", listed["Charles Spurgeon"]["profile"])
+        self.assertNotIn("profile", listed["David Wilkerson"])
 
     def test_unreviewed_profile_never_reaches_from_the_pulpit(self):
         self.set_reviewed("pastors/david-wilkerson.md", False)
@@ -257,9 +261,15 @@ class SkillText(unittest.TestCase):
         self.assertLessEqual(keys, APP_KEYS)
         self.assertIn("name: armor", front.splitlines())
 
-    def test_from_the_pulpit_in_every_response(self):
-        self.assertIn("One short paragraph, in every response.", self.md)
+    def test_from_the_pulpit_in_every_reply(self):
+        self.assertIn("One short paragraph in every response, and a shorter one in every other\n"
+                      "reply about what he's going through", self.md)
         self.assertNotIn("leave this section out", self.md)
+        self.assertNotIn("no devotional", self.md)
+
+    def test_safety_still_comes_first_in_crisis_replies(self):
+        self.assertIn("What\n  keeps him safe always comes first, and From the Pulpit follows", self.md)
+        self.assertIn("then, last, ask him directly", self.md)
 
     def test_placeholder_only_in_commands(self):
         # Claude Code and Cowork replace every occurrence of the placeholder,

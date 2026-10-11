@@ -125,8 +125,9 @@ as `/armor:armor`.
    test the skill skipped it when he was tempted right now.) It is shaped by
    the moment (what happened, how long, what set it off). If he's tempted
    right now, that reply opens by telling him to get away from it first (close
-   the tab or app, change rooms, lights on), then asks. If the settings say
-   "depends on the day," it also asks whether he wants to be heard or helped.
+   the tab or app, change rooms, lights on). It carries a short From the
+   Pulpit, and the question comes last. If the settings say "depends on the
+   day," it also asks whether he wants to be heard or helped.
 3. **Response**, every time in the same three sections:
    - **Scripture**: the passage in the KJV, a plain "in today's words" line
      under it, and an NKJV link (see Sources).
@@ -144,8 +145,12 @@ as `/armor:armor`.
 4. **Stay in the conversation** if he wants to keep talking; tone can be
    changed at any point ("be gentler", "be straight with me").
 
-Setup turns, the follow-up question and the safety replies below aren't
-responses in this sense; a man in crisis gets short replies, not a devotional.
+From the Pulpit is in every reply about what he's going through, not only
+the full response: the follow-up question carries a short one, and the safety
+replies carry a sentence or two (the owner asked for his pastors in every
+reply, crisis included). In the safety replies what keeps him safe always
+comes first, and the pastor follows, never in its place. Only setup and the
+bare check-in, before he has said what's going on, go without it.
 
 Length: about what the first dry run produced. Two short passages, each with
 two or three sentences on why it applies; a paragraph from the pastor; one
@@ -174,6 +179,10 @@ Example:
 > sat under a tree and asked God to take his life, and God didn't scold him.
 > He fed him, let him sleep, and met him there (1 Kings 19).
 >
+> **From the Pulpit: Charles Spurgeon**
+> Spurgeon knew this darkness himself and wrote about it openly. He taught
+> that a heavy spirit is not proof that God has left you.
+>
 > **Psalm 34:18 (KJV)**: "The LORD is nigh unto them that are of a broken
 > heart; and saveth such as be of a contrite spirit."
 > *In today's words:* "The LORD is near to those who have a broken heart, and
@@ -187,8 +196,9 @@ Example:
 What happens next depends on his answer:
 
 - **No.** Continue with the full response for the moment he is in.
-- **Yes, or anything close to it.** No devotional. Short replies, and stay
-  with him:
+- **Yes, or anything close to it.** Short replies, and stay with him. What
+  keeps him safe comes first in each; a sentence or two From the Pulpit
+  follows, never in its place:
   - Ask whether he is safe right now. If he is in immediate danger: 911, or
     the local emergency number.
   - Urge him to reach a person tonight (the crisis line below), and offer to
@@ -233,11 +243,13 @@ the model reads. So:
 - Settings come with the first reply's lookup (`verse.py --settings`), once
   per conversation. A plain `/armor` needs that one quick call before the
   check-in, to know whether setup comes first.
-- Every reference in a reply is looked up in one `verse.py` call, and the
-  chosen pastor's profile comes through the same call (`--pastor`): one tool
+- Every reference in a reply is looked up in one `verse.py` call: one tool
   call per reply outside setup, run as written, with nothing chained onto it.
   (In the first app test Claude built a long chained command to read files,
-  which failed.)
+  which failed.) The reviewed pastor profiles (about 9 KB in all) come with
+  the first lookup, because From the Pulpit is in every reply from the first
+  one on; fetching a profile separately would add a round to the replies
+  that can least afford it, the follow-up and the safety step.
 - SKILL.md stays short; the pastor profiles live in separate files, returned
   only when needed.
 - No permission prompt in a hard moment. In Claude Code, SKILL.md's
@@ -343,8 +355,10 @@ and what the directory checks.
 
 - A summary of what a pastor teaches on the struggle, with his name and the
   Bible references he leans on. No sermon links and no web searching.
-- In every response. armor picks, from the pastors he approved, the one who
-  speaks most to his struggle (each profile lists what he `speaks_to`); if
+- In every reply about what he's going through: a paragraph in the full
+  response, two or three sentences in the follow-up question, a sentence or
+  two after the safety essentials in a safety reply. armor picks, from the
+  pastors he approved, the one who speaks most to his struggle (each profile lists what he `speaks_to`); if
   none speaks to it directly, the one whose teaching comes closest, connected
   honestly. If none of his pastors has a profile it can use, it falls back to
   a reviewed starting pastor and tells him once that `/armor setup` lets him
@@ -361,8 +375,9 @@ and what the directory checks.
 - Only teaching the pastor is actually known for. No made-up direct quotes.
 - Two approvals stand between a profile and a reply:
   - The maintainer's: a profile ships with `reviewed: false` until someone
-    has checked it against published sources, and `verse.py --pastor` refuses
-    an unreviewed profile, so a draft can't reach a reply even by mistake.
+    has checked it against published sources, and `verse.py` never returns an
+    unreviewed profile's text, so a draft can't reach a reply even by
+    mistake.
   - The user's own: setup shows each pastor he picks, one at a time (who he
     is, what he's known for teaching, what he says to the struggles armor
     meets), and saves only the ones he approves. He needs at least one, since
