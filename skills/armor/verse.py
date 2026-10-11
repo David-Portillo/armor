@@ -255,6 +255,8 @@ PASTOR_DIRS = ("pastors", "my-pastors")
 
 # The choices setup offers; anything else is refused before it is saved.
 REGIONS = ("US", "CA", "UK", "IE", "AU", "other")
+# From the Pulpit: every pastor whose teaching applies, or only the best fit.
+PULPIT = ("all", "one")
 TONE = {
     "listen_or_act": ("listen", "act", "ask"),
     "call_out": ("say", "ask"),
@@ -315,6 +317,9 @@ def save_settings(raw):
     if not isinstance(s, dict):
         raise ValueError("--save-settings needs a JSON object")
     tradition, region, pastors, tone = s.get("tradition"), s.get("crisis_region"), s.get("pastors"), s.get("tone")
+    # Setup skips the pulpit question when he approves only one pastor, so a
+    # missing answer means the default.
+    pulpit = s.get("pulpit", "all")
     problems = []
     if not isinstance(tradition, str) or not tradition.strip():
         problems.append("tradition must be a name")
@@ -323,6 +328,8 @@ def save_settings(raw):
     # Every response includes From the Pulpit, which needs at least one pastor.
     if not isinstance(pastors, list) or not pastors or not all(isinstance(n, str) and n.strip() for n in pastors):
         problems.append("pastors must list at least one name")
+    if pulpit not in PULPIT:
+        problems.append(f"pulpit must be one of {', '.join(PULPIT)}")
     if not isinstance(tone, dict):
         tone = {}
     for key, choices in TONE.items():
@@ -341,12 +348,13 @@ def save_settings(raw):
         f"crisis_region: {region}",
         "pastors:",
         *[f"  - {json.dumps(n, ensure_ascii=False)}" for n in names],
+        f"pulpit: {pulpit}",
         "tone:",
         *[f"  {key}: {tone[key]}" for key in TONE],
     ]) + "\n"
     (HERE / "settings.yaml").write_text(text, encoding="utf-8")
     line = (f"armor settings: tradition {tradition.strip()}; crisis line {region}; "
-            f"pastors {', '.join(names)}; " + "; ".join(f"{k} {tone[k]}" for k in TONE))
+            f"pastors {', '.join(names)}; pulpit {pulpit}; " + "; ".join(f"{k} {tone[k]}" for k in TONE))
     return {"saved": "settings.yaml", "line": line}
 
 

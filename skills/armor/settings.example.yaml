@@ -16,6 +16,7 @@ pastors:                    # From the Pulpit uses those with a profile in pasto
   - Tony Evans
   - John Ramirez
   - David Wilkerson
+pulpit: all                 # all: every pastor whose teaching applies | one: only the best fit
 
 tone:
   listen_or_act: ask        # listen | act | ask

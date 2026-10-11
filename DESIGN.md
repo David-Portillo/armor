@@ -374,8 +374,10 @@ and what the directory checks.
   in the follow-up question and after the safety essentials in a safety
   reply. A pastor whose profile has nothing to say to the struggle is left
   out (each profile lists what he `speaks_to`); if none applies directly, the
-  one whose teaching comes closest, connected honestly. If none of his
-  pastors has a profile it can use, the reviewed starting pastors stand in,
+  one whose teaching comes closest, connected honestly. The `pulpit` setting chooses
+  between this and only the best-fitting pastor (setup asks; the default is
+  every pastor who applies). If none of his pastors has a profile it can
+  use, the reviewed starting pastors stand in,
   and armor tells him once that `/armor setup` lets him choose. (Changed
   2026-10-11 from one pastor per reply: the tester wanted all of his
   pastors' points of view.)
@@ -452,6 +454,7 @@ pastors:                    # at least one, each approved at setup
   - Tony Evans
   - John Ramirez
   - David Wilkerson
+pulpit: all                 # all: every pastor whose teaching applies | one: only the best fit
 tone:
   listen_or_act: ask        # listen | act | ask
   call_out: ask             # say | ask
@@ -465,10 +468,12 @@ tone:
 
 Setup asks these on the first run, or on `/armor setup`: tradition; pastors
 (the reviewed starting profiles offered by name, others welcome, then each
-chosen pastor's profile shown for approval, one at a time); the crisis-line
-region; then the tone questions. Translation isn't asked while the KJV is the
-only one bundled. Nine questions in all, asked one per message, numbered ("2
-of 9"). On the phone, setup first sent several at once and went one at a time
+chosen pastor's profile shown for approval, one at a time); whether From the
+Pulpit gives every pastor whose teaching applies or only the best fit
+(skipped when he approved just one); the crisis-line region; then the tone
+questions. Translation isn't asked while the KJV is the
+only one bundled. Ten questions in all, asked one per message, numbered ("2
+of 10"). On the phone, setup first sent several at once and went one at a time
 only when asked. The choices go wherever Claude can show them to tap (the
 Claude app slides them up in a drawer; Claude Code has its own question tool),
 and only become a typed numbered list where it can't; the same goes for

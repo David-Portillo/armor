@@ -187,6 +187,17 @@ class SetupAndPastors(unittest.TestCase):
         self.assertEqual(out["settings_file"], "settings.yaml")
         self.assertIn('- "Charles Spurgeon"', out["settings"])
 
+    def test_pulpit_choice_is_saved_and_defaults_to_all(self):
+        self.run_verse("--save-settings", json.dumps(dict(self.ANSWERS, pulpit="one")))
+        self.assertIn("pulpit: one", (self.dir / "settings.yaml").read_text())
+        code, saved = self.run_verse("--save-settings", json.dumps(self.ANSWERS))  # skipped question
+        self.assertEqual(code, 0, saved)
+        self.assertIn("pulpit: all", (self.dir / "settings.yaml").read_text())
+        self.assertIn("; pulpit all; ", saved["line"])
+        code, out = self.run_verse("--save-settings", json.dumps(dict(self.ANSWERS, pulpit="many")))
+        self.assertEqual(code, 1)
+        self.assertIn("pulpit must be one of all, one", out["errors"][0])
+
     def test_bad_answers_are_refused_and_nothing_is_saved(self):
         bad = dict(self.ANSWERS, crisis_region="Mars", tone=dict(self.ANSWERS["tone"], voice="robot"))
         code, out = self.run_verse("--save-settings", json.dumps(bad))
@@ -303,16 +314,18 @@ class SkillText(unittest.TestCase):
         # numbered list is only the fallback.
         self.assertIn("Whenever you have a tool that shows him choices to tap", text)
         # On the phone the drawer came up for the first question only.
-        self.assertIn("ask every setup question with it: all nine, and each pastor's approval", text)
+        self.assertIn("ask every setup question with it: all ten, and each pastor's approval", text)
         self.assertIn("right through to the last one", text)
         # The app's drawer has a Skip button; a skip keeps the default.
         self.assertIn("If he skips a question, keep the default for it", text)
         setup = text[text.index("## Setup"):text.index("Save it all in one call.")]
-        self.assertEqual(re.findall(r" (\d)\. ", setup), [str(n) for n in range(1, 10)])
+        self.assertEqual(re.findall(r" (\d+)\. ", setup), [str(n) for n in range(1, 11)])
 
-    def test_every_pastor_who_applies_speaks(self):
+    def test_every_pastor_who_applies_speaks_unless_he_chose_one(self):
         text = " ".join(self.md.split())
-        self.assertIn("Every one of his `pastors` whose teaching applies to what he's facing gets his own line", text)
+        self.assertIn("With `pulpit: all`, every one of his `pastors` whose teaching applies", text)
+        self.assertIn("With `pulpit: one`, only the pastor who fits best speaks", text)
+        self.assertIn("does he want to hear from each of his pastors whose teaching fits, or just the one", text)
         self.assertIn("### From the Pulpit\n", self.md)
 
     def test_scripture_comes_with_every_pastor(self):
@@ -321,7 +334,7 @@ class SkillText(unittest.TestCase):
         self.assertIn("The reply also carries one Scripture block", text)
         self.assertIn("Every reply that carries From the Pulpit carries Scripture too", text)
         self.assertIn("Tie the section to at least one passage", text)
-        self.assertIn("one short verse and From the Pulpit (one sentence from each pastor whose teaching applies) follow",
+        self.assertIn("one short verse and From the Pulpit (one sentence from each pastor who speaks, per `pulpit`) follow",
                       text)
 
     def test_safety_still_comes_first_in_crisis_replies(self):

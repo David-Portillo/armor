@@ -53,6 +53,8 @@ The first time you type `/armor`, it asks:
   shows you each one's profile, and uses only the ones you approve. Name a
   pastor who isn't on the list, and in Claude Code it drafts a profile for
   you to approve the same way;
+- whether From the Pulpit gives every one of your pastors whose teaching
+  fits, or just the one who fits best;
 - where you live, for the right crisis line;
 - six short questions on how it should talk to you.
 
