@@ -34,13 +34,14 @@ comes from the Bible text bundled with the skill.
 
 ## Try it
 
-- `/armor` opens with "What's going on?" The first time, it walks you through
-  setup first.
+- `/armor setup` is the place to start: nine quick questions, one at a time.
+  The first time you use armor, it starts with setup whatever you type.
+- `/armor` opens with "What's going on?"
 - `/armor I'm being tempted right now`
 - `/armor I messed up again last night and I feel like garbage`
 - `/armor I'm anxious about tomorrow and I can't sleep`
-- `/armor setup` changes your answers: your pastors, your church tradition,
-  your crisis line, and how armor talks to you.
+- `/armor setup` again any time changes your answers: your pastors, your
+  church tradition, your crisis line, and how armor talks to you.
 
 ## Setup
 

@@ -1,6 +1,6 @@
 ---
 name: armor
-description: Scripture-based encouragement for a Christian man in a hard moment (lust, depression, frustration, fear, self-destruction) with exact KJV verses, a plain modern rendering, NKJV links, what his pastors taught, and one next step. Use only when the user's message starts with /armor; never start it on your own.
+description: Scripture-based encouragement for a Christian man in a hard moment (lust, depression, frustration, fear, self-destruction) with exact KJV verses, a plain modern rendering, NKJV links, what his pastors taught, and one next step. Use only when the user's message starts with /armor or asks to try or set up armor; never start it on your own.
 license: MIT
 allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/verse.py *)
 ---
@@ -77,9 +77,12 @@ conversation.
 
 ## How a conversation goes
 
-1. **Setup or check-in.** If he typed `/armor setup`, run Setup. If he typed
-   only `/armor`, run Setup when `first_run` is true, then the check-in;
-   otherwise go straight to the check-in, exactly this:
+1. **Setup or check-in.** The first time someone uses armor (`first_run` is
+   true), setup comes first: open with "Let's go through the setup," run
+   Setup, then the check-in. That holds whatever his first message is, `/armor`
+   alone, a request to try armor, or a question about it, unless it's about
+   something hard (see below). `/armor setup`, or asking to set it up, runs
+   Setup at any time. Otherwise, go straight to the check-in, exactly this:
 
    > What's going on?
    >
@@ -91,6 +94,9 @@ conversation.
    > - Anxious about something
    > - I've been hurting myself, or thinking about it
    > - Nothing urgent, I just want some time in the Word
+
+   When you have a tool that shows choices to tap, ask "What's going on?" and
+   offer the list there instead; he can still type his own words.
 
    If his first message already says what's going on, that is his answer;
    don't ask it again. Never make a man who came with something hard wait on
@@ -158,10 +164,13 @@ passage, more on this, or just keep talking. Nothing beyond that until he asks.
 
 Open with one line: nine quick questions so armor fits him, about two
 minutes. Then ask them one at a time: one question per message, numbered
-("2 of 9"), with its short reason and its choices as a short numbered list, so
-he can answer with just a number (or use a multiple-choice question tool, if
-you have one). Wait for his answer before the next question. Never put two
-questions in one message.
+("2 of 9"), with its short reason. Whenever you have a tool that shows him
+choices to tap (the Claude app shows them in a drawer; Claude Code has its own
+question tool), put each question's choices there, one question per call.
+Only without such a tool, give the choices as a short numbered list, so he can
+answer with just a number. He can always answer in his own words instead.
+Wait for his answer before the next question. Never put two questions in one
+message.
 
 1. His church tradition: Baptist, Reformed, Pentecostal, non-denominational,
    or another.
@@ -169,7 +178,8 @@ questions in one message.
    with what he speaks to, and invite others by name. Then take the ones he
    picks one per message: show him who the pastor is, what he is known for
    teaching and what he says to the struggles armor meets, all from that
-   pastor's `profile` text, and ask whether armor should draw on him. Only
+   pastor's `profile` text, and ask whether armor should draw on him (yes or
+   no, as choices to tap when you can). Only
    the pastors he approves go in `pastors`, and he needs at least one,
    because every response includes From the Pulpit. A pastor he names who has
    no profile gets one drafted for the same approval (below).

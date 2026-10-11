@@ -267,11 +267,23 @@ class SkillText(unittest.TestCase):
         self.assertNotIn("leave this section out", self.md)
         self.assertNotIn("no devotional", self.md)
 
+    def test_first_use_starts_with_setup(self):
+        # Whatever opens the first chat (the directory's Try button included),
+        # a new user goes through setup first, and asking to try or set up
+        # armor is enough to start it.
+        text = " ".join(self.md.split())
+        self.assertIn("asks to try or set up armor", text.split("---")[1])
+        self.assertIn("setup comes first: open with \"Let's go through the setup,\"", text)
+        self.assertIn("That holds whatever his first message is", text)
+
     def test_setup_asks_one_question_at_a_time(self):
         # On the phone, setup first sent several questions at once.
         text = " ".join(self.md.split())
         self.assertIn("one question per message, numbered", text)
         self.assertIn("Never put two questions in one message.", text)
+        # On the phone the app can show choices in a drawer to tap; a typed
+        # numbered list is only the fallback.
+        self.assertIn("Whenever you have a tool that shows him choices to tap", text)
         setup = text[text.index("## Setup"):text.index("Save it all in one call.")]
         self.assertEqual(re.findall(r" (\d)\. ", setup), [str(n) for n in range(1, 10)])
 
@@ -353,6 +365,13 @@ class Directory(unittest.TestCase):
         self.assertRegex(m["version"], r"^\d+\.\d+\.\d+$")
         for key in ["description", "author", "license"]:
             self.assertIn(key, m)
+
+    def test_listing_points_new_users_to_setup(self):
+        m = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text())
+        self.assertIn("/armor setup", m["description"])
+        readme = (ROOT / "README.md").read_text()
+        first_example = readme.split("## Try it")[1].strip().splitlines()[0]
+        self.assertTrue(first_example.startswith("- `/armor setup`"), first_example)
 
     def test_readme_and_license(self):
         readme = re.sub(r"```.*?```", "", (ROOT / "README.md").read_text(), flags=re.S)

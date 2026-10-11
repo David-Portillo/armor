@@ -92,8 +92,11 @@ the computer. What that requires:
 
 ## Starting the skill
 
-Only `/armor` starts it. Claude should never start it on its own, even when a
-man mentions struggling in an unrelated conversation.
+Only `/armor`, or a person asking to try or set up armor, starts it. Claude
+should never start it on its own, even when a man mentions struggling in an
+unrelated conversation. (Asking to try armor was added so that a chat opened
+from the directory's Try button loads it; the docs don't say what prompt that
+button sends.)
 
 Claude Code's `disable-model-invocation` would make that a hard rule there,
 but the app refuses that key, and a plugin uses one SKILL.md everywhere. So
@@ -104,11 +107,13 @@ as `/armor:armor`.
 
 ## Session flow
 
-1. **Setup or check-in.** The first time a man types plain `/armor` (no
-   settings of his own yet), setup comes first (see Setup questions), then
-   the check-in; `/armor setup` runs it again anytime. A man who came with
-   something hard is never made to wait on setup: armor helps first with the
-   defaults and offers setup once at the end. The check-in itself is an open
+1. **Setup or check-in.** The first time anyone uses armor (no settings of
+   his own yet), armor opens with "Let's go through the setup" and runs it
+   (see Setup questions), then the check-in, whatever the first message was:
+   `/armor`, a request to try armor, or a question about it. `/armor setup`
+   runs it again anytime. A man who came with something hard is never made to
+   wait on setup: armor helps first with the defaults and offers setup once at
+   the end. The check-in itself is an open
    question first; the list is only a fallback.
 
    > What's going on?
@@ -447,9 +452,12 @@ Setup asks these on the first run, or on `/armor setup`: tradition; pastors
 chosen pastor's profile shown for approval, one at a time); the crisis-line
 region; then the tone questions. Translation isn't asked while the KJV is the
 only one bundled. Nine questions in all, asked one per message, numbered ("2
-of 9"), with the choices as a short numbered list so he can answer with a
-number; on the phone, setup first sent several at once and went one at a time
-only when asked. Each tone question has one short line saying why it is
+of 9"). On the phone, setup first sent several at once and went one at a time
+only when asked. The choices go wherever Claude can show them to tap (the
+Claude app slides them up in a drawer; Claude Code has its own question tool),
+and only become a typed numbered list where it can't; the same goes for
+approving each pastor and the check-in list. The tester preferred the drawer
+to typing a number. Each tone question has one short line saying why it is
 asked, so the user knows what they are choosing:
 
 1. **When you're hurting, should I listen first, or jump to what to do?**
