@@ -310,8 +310,16 @@ class SkillText(unittest.TestCase):
         setup = text[text.index("## Setup"):text.index("Save it all in one call.")]
         self.assertEqual(re.findall(r" (\d)\. ", setup), [str(n) for n in range(1, 10)])
 
+    def test_scripture_comes_with_every_pastor(self):
+        # On the phone the follow-up reply had From the Pulpit but no verses.
+        text = " ".join(self.md.split())
+        self.assertIn("The reply also carries one Scripture block", text)
+        self.assertIn("Every reply that carries From the Pulpit carries Scripture too", text)
+        self.assertIn("Tie it to at least one passage", text)
+        self.assertIn("one short verse and a sentence or two From the Pulpit follow", text)
+
     def test_safety_still_comes_first_in_crisis_replies(self):
-        self.assertIn("What\n  keeps him safe always comes first, and From the Pulpit follows", self.md)
+        self.assertIn("What\n  keeps him safe always comes first;", self.md)
         self.assertIn("then, last, ask him directly", self.md)
 
     def test_placeholder_only_in_commands(self):

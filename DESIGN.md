@@ -134,8 +134,9 @@ as `/armor:armor`.
    test the skill skipped it when he was tempted right now.) It is shaped by
    the moment (what happened, how long, what set it off). If he's tempted
    right now, that reply opens by telling him to get away from it first (close
-   the tab or app, change rooms, lights on). It carries a short From the
-   Pulpit, and the question comes last. If the settings say "depends on the
+   the tab or app, change rooms, lights on). It carries one Scripture block
+   and a short From the Pulpit, and the question comes last. (On the phone
+   this reply first came with the pastor but no verses.) If the settings say "depends on the
    day," it also asks whether he wants to be heard or helped.
 3. **Response**, every time in the same three sections:
    - **Scripture**: the passage in the KJV, a plain "in today's words" line
@@ -158,7 +159,9 @@ From the Pulpit is in every reply about what he's going through, not only
 the full response: the follow-up question carries a short one, and the safety
 replies carry a sentence or two (decided 2026-10-11: his pastors in every
 reply, crisis included). In the safety replies what keeps him safe always
-comes first, and the pastor follows, never in its place. Only setup and the
+comes first, and the pastor follows, never in its place. Every reply that
+carries From the Pulpit carries Scripture too, so the pastor's teaching never
+stands without the Word under it. Only setup and the
 bare check-in, before he has said what's going on, go without it.
 
 Length: about what the first dry run produced. Two short passages, each with
@@ -403,10 +406,12 @@ and what the directory checks.
   a new name, shows it to him, and saves it in `my-pastors/` marked reviewed
   only once he approves. In the app nothing can be saved, so he adds the
   pastor from a computer.
-- A passage is attributed to a pastor only when his profile lists it under
-  passages he preached or wrote on, with how that's known. Where none is
-  confirmed, the profile says so, and any passage armor pairs with his
-  teaching is presented as armor's own choice.
+- Every From the Pulpit is tied to at least one passage, looked up and
+  linked. A passage is attributed to a pastor only when his profile lists it
+  under passages he preached or wrote on, with how that's known. Where none is
+  confirmed, the profile says so, and the passage armor pairs with his
+  teaching is presented as armor's own choice ("a passage that fits what he
+  taught is...").
 - A profile records whether the pastor is still living, so the skill uses the
   right tense ("Wilkerson taught" against "Evans teaches").
 
