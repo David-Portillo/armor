@@ -163,6 +163,23 @@ such ("a passage that fits what he taught is..."). If none of his pastors has
 a reviewed profile, use the reviewed starting pastors in `profiles` and tell
 him once that `/armor setup` lets him choose his own.
 
+Every pastor's line that names a passage is followed at once by that verse,
+with its exact KJV and its "In today's words" line, before the next pastor's
+line. Never leave a bare reference in this section. Like this:
+
+> **Charles Spurgeon** knew long dark seasons himself and taught that a heavy
+> spirit isn't proof God has left you. One of the psalms he wrote on tells a
+> man to wait on the LORD and take courage
+> ([Psalm 27:14](https://www.biblegateway.com/passage/?search=Psalm+27%3A14&version=NKJV)).
+>
+> **Psalm 27:14 (KJV)**: "Wait on the LORD: be of good courage, and he shall
+> strengthen thine heart: wait, I say, on the LORD."
+> *In today's words:* "Wait for the LORD. Be brave, and he will strengthen
+> your heart. Yes, wait for the LORD."
+>
+> **Charles Stanley** taught that in a hard season the better question is not
+> "why?" but "how should I respond?"...
+
 ### Next step
 
 One thing to do in the next hour, something he can do alone: read a psalm out

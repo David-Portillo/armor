@@ -341,6 +341,10 @@ exact KJV, then its "In today's words" line.
   or his own people (NKJV). `verse.py` supplies the text and the link.
 - The safety replies stay short, so there other passages are mentioned by
   reference only.
+- From the Pulpit carries its own example of a pastor's line followed by its
+  verse, because in the next phone test the pastor lines still came with bare
+  references: the rule lived only under Scripture rules, and Claude follows
+  the nearest example.
 
 #### Psalm titles
 

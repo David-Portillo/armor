@@ -356,6 +356,14 @@ class SkillText(unittest.TestCase):
         self.assertIn('**Proverbs 3:5-6 (KJV)**: "Trust in the LORD with all thine heart;', self.md)
         self.assertNotIn("retold in today's words, without quotation marks", text)
 
+    def test_from_the_pulpit_shows_its_own_verse_example(self):
+        # On the phone the pastor lines still came with bare references, so the
+        # section now carries its own example of a line followed by its verse.
+        section = self.md[self.md.index("### From the Pulpit"):self.md.index("### Next step")]
+        self.assertIn("Never leave a bare reference in this section.", " ".join(section.split()))
+        self.assertIn('> **Psalm 27:14 (KJV)**: "Wait on the LORD: be of good courage,', section)
+        self.assertIn("> *In today's words:*", section)
+
     def test_safety_still_comes_first_in_crisis_replies(self):
         self.assertIn("What\n  keeps him safe always comes first;", self.md)
         self.assertIn("then, last, ask him directly", self.md)
