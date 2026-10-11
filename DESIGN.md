@@ -446,7 +446,10 @@ Setup asks these on the first run, or on `/armor setup`: tradition; pastors
 (the reviewed starting profiles offered by name, others welcome, then each
 chosen pastor's profile shown for approval, one at a time); the crisis-line
 region; then the tone questions. Translation isn't asked while the KJV is the
-only one bundled. Each tone question has one short line saying why it is
+only one bundled. Nine questions in all, asked one per message, numbered ("2
+of 9"), with the choices as a short numbered list so he can answer with a
+number; on the phone, setup first sent several at once and went one at a time
+only when asked. Each tone question has one short line saying why it is
 asked, so the user knows what they are choosing:
 
 1. **When you're hurting, should I listen first, or jump to what to do?**
