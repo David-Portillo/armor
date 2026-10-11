@@ -14,6 +14,7 @@ verse-0 line (see tools/build_bible.py in the repository).
     verse.py --pastor "Charles Spurgeon" "Psalm 42:11"
     verse.py --pastor "Charles Spurgeon" --pastor "David Wilkerson"   # setup
     verse.py --save-settings '{"tradition": "Baptist", ...}'
+    verse.py --save-pastor '{"name": "David Jeremiah", ...}'
 
 Pass every reference a reply needs in one call. Each call is a tool round trip
 for the skill, which costs far more time than the lookup itself. The other
@@ -33,8 +34,13 @@ does when it shows each chosen pastor's profile for the user's approval. Only
 a profile marked reviewed is returned: From the Pulpit says what a real man
 taught, so no draft reaches it.
 
+--save-pastor saves a pastor profile that setup drafted on the spot for a
+pastor the user named, after he approved it, in my-pastors/ marked reviewed.
+Only an approved draft may be saved this way.
+
 --save-settings checks the answers from setup and writes settings.yaml. It
-also prints them as one "line". In the Claude app's chat every conversation
+also prints them as one "line", which carries a short summary of each pastor
+he added himself ("my_pastors"). In the Claude app's chat every conversation
 gets a fresh copy of the skill, so a saved file doesn't last; SKILL.md tells
 Claude how to recognize that and hand the line to the user for their Claude
 profile preferences instead. This script can't tell where it is running.
@@ -257,6 +263,8 @@ PASTOR_DIRS = ("pastors", "my-pastors")
 REGIONS = ("US", "CA", "UK", "IE", "AU", "other")
 # From the Pulpit: every pastor whose teaching applies, or only the best fit.
 PULPIT = ("all", "one")
+# Longest summary of his own pastor that the settings line will carry.
+SUMMARY_MAX = 500
 TONE = {
     "listen_or_act": ("listen", "act", "ask"),
     "call_out": ("say", "ask"),
@@ -330,6 +338,22 @@ def save_settings(raw):
         problems.append("pastors must list at least one name")
     if pulpit not in PULPIT:
         problems.append(f"pulpit must be one of {', '.join(PULPIT)}")
+    # His own pastors ride in the line as short summaries: in the Claude app
+    # that line, pasted into his preferences, is the only thing that lasts
+    # between chats.
+    mine = s.get("my_pastors", [])
+    if not isinstance(mine, list):
+        mine = None
+    for m in mine or []:
+        ok = (isinstance(m, dict) and isinstance(m.get("name"), str) and m["name"].strip()
+              and isinstance(m.get("living"), bool) and isinstance(m.get("summary"), str)
+              and 0 < len(m["summary"].strip()) <= SUMMARY_MAX)
+        if not ok:
+            mine = None
+            break
+    if mine is None:
+        problems.append(f"my_pastors must list {{name, living, speaks_to, summary}} with a summary of "
+                        f"1 to {SUMMARY_MAX} characters")
     if not isinstance(tone, dict):
         tone = {}
     for key, choices in TONE.items():
@@ -355,7 +379,40 @@ def save_settings(raw):
     (HERE / "settings.yaml").write_text(text, encoding="utf-8")
     line = (f"armor settings: tradition {tradition.strip()}; crisis line {region}; "
             f"pastors {', '.join(names)}; pulpit {pulpit}; " + "; ".join(f"{k} {tone[k]}" for k in TONE))
+    for m in mine:
+        about = "living" if m["living"] else "no longer living"
+        if str(m.get("speaks_to", "")).strip():
+            about += f"; speaks to {str(m['speaks_to']).strip()}"
+        line += f" | my pastor {m['name'].strip()} ({about}): {' '.join(m['summary'].split())}"
     return {"saved": "settings.yaml", "line": line}
+
+
+def save_pastor(raw):
+    try:
+        p = json.loads(raw)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"--save-pastor needs JSON: {e}")
+    if not isinstance(p, dict):
+        raise ValueError("--save-pastor needs a JSON object")
+    name, living, speaks_to, profile = p.get("name"), p.get("living"), p.get("speaks_to", ""), p.get("profile")
+    problems = []
+    if not isinstance(name, str) or not name.strip() or "\n" in name:
+        problems.append("name must be one line")
+    if not isinstance(living, bool):
+        problems.append("living must be true or false")
+    if not isinstance(speaks_to, str) or "\n" in speaks_to:
+        problems.append("speaks_to must be one line")
+    if not isinstance(profile, str) or not profile.strip():
+        problems.append("profile must be the approved profile text")
+    if problems:
+        raise ValueError("; ".join(problems))
+    slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+    folder = HERE / "my-pastors"
+    folder.mkdir(exist_ok=True)
+    (folder / f"{slug}.md").write_text(
+        f"---\nname: {name.strip()}\nliving: {str(living).lower()}\nreviewed: true\n"
+        f"speaks_to: {speaks_to.strip()}\n---\n\n{profile.strip()}\n", encoding="utf-8")
+    return {"saved": f"my-pastors/{slug}.md", "name": name.strip()}
 
 
 def main():
@@ -366,16 +423,19 @@ def main():
     p.add_argument("--pastor", metavar="NAME", action="append",
                    help="also return this pastor's reviewed profile; repeat for several")
     p.add_argument("--save-settings", metavar="JSON", help="save the answers from setup to settings.yaml")
+    p.add_argument("--save-pastor", metavar="JSON",
+                   help="save a pastor profile the user approved, to my-pastors/")
     p.add_argument("--translation", default="kjv", help="bundled text to read (default: kjv)")
     args = p.parse_args()
 
-    if args.save_settings is not None:
-        try:
-            print(json.dumps(save_settings(args.save_settings), ensure_ascii=False))
-        except ValueError as e:
-            print(json.dumps({"errors": [str(e)]}, ensure_ascii=False))
-            sys.exit(1)
-        return
+    for raw, save in ((args.save_settings, save_settings), (args.save_pastor, save_pastor)):
+        if raw is not None:
+            try:
+                print(json.dumps(save(raw), ensure_ascii=False))
+            except ValueError as e:
+                print(json.dumps({"errors": [str(e)]}, ensure_ascii=False))
+                sys.exit(1)
+            return
     if not args.refs and not args.settings and not args.pastor:
         p.error("give at least one reference, --settings or --pastor")
     out = {"translation": args.translation.upper(), "results": [], "errors": []}

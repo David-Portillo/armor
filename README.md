@@ -51,8 +51,9 @@ The first time you type `/armor`, it asks:
 - which pastors you trust. It offers six to start (Charles Spurgeon, Charles
   Stanley, Voddie Baucham, Tony Evans, John Ramirez and David Wilkerson),
   shows you each one's profile, and uses only the ones you approve. Name a
-  pastor who isn't on the list, and in Claude Code it drafts a profile for
-  you to approve the same way;
+  pastor who isn't on the list, and it writes his profile on the spot for you
+  to approve the same way, then saves it (in the Claude app, inside your
+  settings line);
 - whether From the Pulpit gives every one of your pastors whose teaching
   fits, or just the one who fits best;
 - where you live, for the right crisis line;

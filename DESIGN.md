@@ -424,10 +424,15 @@ and what the directory checks.
     tester asked for the "why" after seeing profiles with no reason given. He needs at least one, since
     every response includes From the Pulpit; `verse.py --save-settings`
     refuses an empty list.
-- Adding a pastor means adding a profile. In Claude Code, setup drafts one for
-  a new name, shows it to him, and saves it in `my-pastors/` marked reviewed
-  only once he approves. In the app nothing can be saved, so he adds the
-  pastor from a computer.
+- Adding a pastor means adding a profile, written on the spot in setup
+  wherever he is, shown with the same accuracy question, and saved with
+  `verse.py --save-pastor` only once he approves (in `my-pastors/`, marked
+  reviewed). In Claude Code that lasts. In the app it lasts only the chat, so
+  a short summary of each pastor he added (`my_pastors`, up to 500
+  characters) rides in his settings line, and the one paste into his
+  preferences keeps them. A starting profile he corrects is handled the same
+  way. (Since 1.0.1; before, the app sent him to a computer, which most
+  directory users won't have.)
 - Every From the Pulpit is tied to at least one passage, looked up and
   linked. A passage is attributed to a pastor only when his profile lists it
   under passages he preached or wrote on, with how that's known. Where none is

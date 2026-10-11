@@ -52,7 +52,8 @@ setup has saved settings of his own) and `profiles` (each pastor profile's
 `speaks_to`, and for reviewed ones the `profile` text itself, which is all
 From the Pulpit draws on). If his Claude preferences include a line starting "armor
 settings:", that line is his settings: use it instead, and treat `first_run`
-as false.
+as false. Each "my pastor" entry in it is a pastor he approved himself; its
+summary is that pastor's profile.
 
 - `tone.listen_or_act`: `listen`, let him get it all out before offering
   anything; `act`, move toward what to do; `ask`, in your follow-up also ask
@@ -228,15 +229,12 @@ questions in one message.
    From the Pulpit," with the choices "Yes, use him", "Something's off" and
    "Leave him out". Only the pastors he approves go in `pastors`, and he needs
    at least one, because every response includes From the Pulpit. If
-   something's off, ask what. Outside the app's chat, write the profile again
-   with his correction (in the shape below, marked `reviewed: true`), show it
-   to him, and once he approves it save it as
-   `my-pastors/<first-last>.md` in the folder that holds verse.py; it replaces
-   the starting profile for him. In the app's chat nothing can be saved: leave
-   that pastor out for now, and tell him he can correct the profile from a
-   computer, or report it at github.com/David-Portillo/armor/issues so it's
-   fixed for everyone. A pastor he names who has no profile gets one drafted
-   for the same approval (below).
+   something's off, ask what, write the profile again with his correction,
+   and treat it like a pastor he added (below): it replaces the starting
+   profile for him. Also tell him he can report it at
+   github.com/David-Portillo/armor/issues so it's fixed for everyone. A
+   pastor he names who has no profile gets one written on the spot, for the
+   same approval (below).
 3. When From the Pulpit comes up, does he want to hear from each of his
    pastors whose teaching fits, or just the one who fits best? Several give
    him more voices; one keeps replies shorter. Skip this one if he approved
@@ -284,12 +282,20 @@ a code block of its own (the app gives it a copy button), then say in one
 sentence where it goes: Claude's Settings, in the box "What personal
 preferences should Claude consider in responses?" Every new chat picks it up.
 
-A pastor he names who has no profile can't appear in From the Pulpit yet.
-Outside the app's chat, offer to draft one: only what that pastor is actually
-known for, leaving out anything you aren't sure of, in the shape below. Show
-it to him, and save it as `my-pastors/<first-last>.md` in the folder that
-holds verse.py, marked `reviewed: true` only once he approves it. In the
-app's chat, tell him he can add the pastor from a computer.
+A pastor he names who has no profile gets one written on the spot, wherever
+he is: only what that pastor is actually known for, leaving out anything you
+aren't sure of, in the shape below. Show it to him with the same question and
+choices as the starting pastors ("Is this an accurate picture of <name>?"); if
+something's off, fix it and ask again. Only once he approves it, save it:
+
+`python3 ${CLAUDE_SKILL_DIR}/verse.py --save-pastor '{"name": "First Last", "living": true, "speaks_to": "fear, hope", "profile": "# First Last\nWho he is..."}'`
+
+In Claude Code that keeps him for good. In the app's chat it lasts only this
+chat, so when you save the settings also pass `my_pastors`: for each pastor he
+added, his `name`, `living`, `speaks_to` and a `summary` of up to 500
+characters (who he is and what he teaches on the struggles armor meets). The
+settings line then carries them, and the one paste into his preferences keeps
+his own pastors too.
 
     ---
     name: First Last

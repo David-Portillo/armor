@@ -263,6 +263,31 @@ class SetupAndPastors(unittest.TestCase):
         self.assertIn("His corrected profile.", listed[0]["profile"])
         self.assertIn("His corrected profile.", self.run_verse("--pastor", "Spurgeon")[1]["pastors"][0]["profile"])
 
+    def test_a_pastor_he_adds_is_saved_after_approval(self):
+        # Setup writes the profile on the spot and saves it once he approves.
+        code, out = self.run_verse("--save-pastor", json.dumps(
+            {"name": "David Jeremiah", "living": True, "speaks_to": "hope, fear",
+             "profile": "# David Jeremiah\nWhat he is known for."}))
+        self.assertEqual(code, 0, out)
+        self.assertEqual(out["saved"], "my-pastors/david-jeremiah.md")
+        listed = {p["name"]: p for p in self.run_verse("--settings")[1]["profiles"]}
+        self.assertTrue(listed["David Jeremiah"]["reviewed"])
+        self.assertIn("What he is known for.", listed["David Jeremiah"]["profile"])
+        code, out = self.run_verse("--save-pastor", json.dumps({"name": "", "living": "yes"}))
+        self.assertEqual(code, 1)
+
+    def test_his_own_pastors_ride_in_the_settings_line(self):
+        # In the app the pasted line is all that lasts, so it carries them.
+        mine = [{"name": "David Jeremiah", "living": True, "speaks_to": "hope", "summary": "A short summary."}]
+        code, saved = self.run_verse("--save-settings", json.dumps(
+            dict(self.ANSWERS, pastors=["David Jeremiah"], my_pastors=mine)))
+        self.assertEqual(code, 0, saved)
+        self.assertIn(" | my pastor David Jeremiah (living; speaks to hope): A short summary.", saved["line"])
+        too_long = [dict(mine[0], summary="x" * 501)]
+        code, out = self.run_verse("--save-settings", json.dumps(dict(self.ANSWERS, my_pastors=too_long)))
+        self.assertEqual(code, 1)
+        self.assertIn("my_pastors", out["errors"][0])
+
     def test_a_users_own_pastor_profile_is_read(self):
         (self.dir / "my-pastors").mkdir()
         (self.dir / "my-pastors" / "paul-washer.md").write_text(
@@ -322,6 +347,12 @@ class SkillText(unittest.TestCase):
         self.assertIn('"Let\'s go through the setup. If you\'ve done it before, paste your armor settings line instead."',
                       text)
         self.assertIn('If he pastes a line starting "armor settings:", use it and skip the questions', text)
+
+    def test_new_pastors_are_written_on_the_spot_and_saved(self):
+        text = " ".join(self.md.split())
+        self.assertIn("A pastor he names who has no profile gets one written on the spot, wherever he is", text)
+        self.assertIn("verse.py --save-pastor", text)
+        self.assertIn('Each "my pastor" entry in it is a pastor he approved himself', text)
 
     def test_setup_asks_one_question_at_a_time(self):
         # On the phone, setup first sent several questions at once.
