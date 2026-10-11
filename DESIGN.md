@@ -147,7 +147,7 @@ as `/armor:armor`.
 
 From the Pulpit is in every reply about what he's going through, not only
 the full response: the follow-up question carries a short one, and the safety
-replies carry a sentence or two (the owner asked for his pastors in every
+replies carry a sentence or two (decided 2026-10-11: his pastors in every
 reply, crisis included). In the safety replies what keeps him safe always
 comes first, and the pastor follows, never in its place. Only setup and the
 bare check-in, before he has said what's going on, go without it.
@@ -492,8 +492,8 @@ should take with a man who is struggling.
   2026-10-11, in the app on a computer: `/armor` started the skill and the menu
   was skipped as designed; the folder guess, the skipped follow-up and the
   too-literal rendering were fixed afterwards. Setup then ran in the app and
-  saved; pasting the settings line was the awkward part, so the owner's
-  answers were built into his ZIP. Still to test: the phone.
+  saved; pasting the settings line was the awkward part, so the tester's
+  answers were built into his own ZIP. Still to test: the phone.
 - **What `tradition` changes.** Nothing is defined yet. For a Baptist, one
   clear effect: a fall never puts his salvation in doubt (eternal security),
   which shapes every "after a fall" reply.
