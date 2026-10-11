@@ -485,21 +485,30 @@ were typed lists, so SKILL.md now says every question and every approval goes
 through the drawer, and says it again right after the list. Each tone question has one short line saying why it is
 asked, so the user knows what they are choosing:
 
-1. **When you're hurting, should I listen first, or jump to what to do?**
-   Some guys need to get it out before they can hear anything.
+1. **When you're hurting, should I listen first, jump to what to do, or ask
+   you each time?** Some guys need to get it out before they can hear
+   anything. *Listen first / Help me figure out what to do / Ask me each
+   time.*
 2. **If I think you're making excuses, should I point it out, or ask you
-   something so you see it yourself?**
-   Excuses keep us stuck, so I won't ignore them. This is about how I bring it up.
-3. **Short replies, or longer ones that explain more?**
-   When things are hard, a long message can be too much.
-4. **Should I sound like a friend in it with you, or more like an older mentor?**
-   This changes how I talk, not what's true.
-5. **When something hard needs saying, how should I say it: straight but kind,
-   or gently and slowly?**
-   I'll always be honest. This is only about how I say it.
-6. **After you slip up, what do you need first: to know God hasn't given up on
-   you, or a plan for next time?**
-   You'll get both. This is just the order.
+   something so you see it yourself?** Excuses keep us stuck, so I won't
+   ignore them; this is about how I bring it up. *Point it out / Ask me
+   something so I see it.*
+3. **Short replies, or longer ones that explain more?** When things are hard,
+   a long message can be too much. *Short / Longer, with more explanation.*
+4. **Should I sound like a friend in it with you, an older mentor, or a bit
+   of both?** This changes how I talk, not what's true. *A friend in it with
+   me / An older mentor / A bit of both.*
+5. **When something hard needs saying, should I say it straight but kind, or
+   gently and slowly?** I'll always be honest; this is only about how.
+   *Straight but kind / Gently and slowly.*
+6. **After you slip up, which should come first?** You'll get both; this only
+   sets the order. *Grace first: remind me God hasn't given up on me / Plan
+   first: help me keep it from happening again.*
+
+Every setup question carries its exact choices in SKILL.md, because Claude
+otherwise invents the drawer's labels each time; the tester found the
+after-a-fall choices unclear that way ("to know God hasn't given up on you,
+or a plan for next time" didn't say he gets both).
 
 Honesty is not a setting; only delivery is. An earlier draft asked "Can I be
 blunt with you?" and was dropped because bluntness is not the stance the skill

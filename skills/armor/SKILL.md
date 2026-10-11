@@ -191,8 +191,8 @@ pastors, keep the reviewed starting pastors and tell him `/armor setup` lets
 him choose later. Wait for his answer before the next question. Never put two
 questions in one message.
 
-1. His church tradition: Baptist, Reformed, Pentecostal, non-denominational,
-   or another.
+1. His church tradition. Choices: "Baptist", "Reformed", "Pentecostal",
+   "Non-denominational" (or he types another).
 2. Which pastors he trusts. Offer the `reviewed` names in `profiles`, each
    with what he speaks to (he may pick several), and invite others by name.
    Then tell him in a sentence why the next step matters: armor never says
@@ -216,30 +216,41 @@ questions in one message.
 3. When From the Pulpit comes up, does he want to hear from each of his
    pastors whose teaching fits, or just the one who fits best? Several give
    him more voices; one keeps replies shorter. Skip this one if he approved
-   only one pastor.
-4. Where he lives, for the right crisis line: US, Canada, UK, Ireland,
-   Australia, or elsewhere.
+   only one pastor. Choices: "Each of my pastors whose teaching fits" (all),
+   "Just the one who fits best" (one).
+4. Where he lives, for the right crisis line. Choices: "United States" (US),
+   "Canada" (CA), "United Kingdom" (UK), "Ireland" (IE), "Australia" (AU),
+   "Somewhere else" (other).
 5. When you're hurting, should I listen first, jump to what to do, or ask you
    each time? Some guys need to get it out before they can hear anything.
+   Choices: "Listen first" (listen), "Help me figure out what to do" (act),
+   "Ask me each time" (ask).
 6. If I think you're making excuses, should I point it out, or ask you
    something so you see it yourself? Excuses keep us stuck, so I won't ignore
-   them; this is about how I bring it up.
+   them; this is about how I bring it up. Choices: "Point it out" (say), "Ask
+   me something so I see it" (ask).
 7. Short replies, or longer ones that explain more? When things are hard, a
-   long message can be too much.
+   long message can be too much. Choices: "Short" (short), "Longer, with more
+   explanation" (long).
 8. Should I sound like a friend in it with you, an older mentor, or a bit of
-   both? This changes how I talk, not what's true.
+   both? This changes how I talk, not what's true. Choices: "A friend in it
+   with me" (friend), "An older mentor" (mentor), "A bit of both"
+   (friend-and-mentor).
 9. When something hard needs saying, should I say it straight but kind, or
-   gently and slowly? I'll always be honest; this is only about how.
-10. After you slip up, what do you need first: to know God hasn't given up
-    on you, or a plan for next time? You'll get both; this is just the order.
+   gently and slowly? I'll always be honest; this is only about how. Choices:
+   "Straight but kind" (straight), "Gently and slowly" (gentle).
+10. After you slip up, which should come first? You'll get both; this only
+    sets the order. Choices: "Grace first: remind me God hasn't given up on
+    me" (grace-first), "Plan first: help me keep it from happening again"
+    (plan-first).
 
 Each of these ten, and each pastor's approval, is its own question in the tap
-tool when you have it, right through to the last one.
+tool when you have it, right through to the last one, with the choices worded
+exactly as above.
 
-Save it all in one call. The values: `pulpit` all or one; `crisis_region`
-US, CA, UK, IE, AU or other; `listen_or_act` listen, act or ask; `call_out` say or ask; `length`
-short or long; `voice` friend, mentor or friend-and-mentor; `delivery` gentle
-or straight; `after_a_fall` grace-first or plan-first.
+Save it all in one call, using the value in parentheses after each choice
+he made (`pulpit`, `crisis_region`, then the six tone answers in order:
+`listen_or_act`, `call_out`, `length`, `voice`, `delivery`, `after_a_fall`).
 
 `python3 ${CLAUDE_SKILL_DIR}/verse.py --save-settings '{"tradition": "Baptist", "crisis_region": "US", "pastors": ["Charles Spurgeon"], "pulpit": "all", "tone": {"listen_or_act": "ask", "call_out": "ask", "length": "short", "voice": "friend-and-mentor", "delivery": "gentle", "after_a_fall": "grace-first"}}'`
 

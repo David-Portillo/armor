@@ -305,6 +305,16 @@ class SkillText(unittest.TestCase):
         self.assertIn('"Is this an accurate picture of <name>?', text)
         self.assertIn('"Yes, use him", "Something\'s off" and "Leave him out"', text)
 
+    def test_setup_choices_are_worded_exactly(self):
+        # The tester found the after-a-fall choices unclear when Claude made
+        # them up; every question now carries its exact choices.
+        text = " ".join(self.md.split())
+        setup = text[text.index("## Setup"):text.index("Save it all in one call")]
+        self.assertEqual(setup.count("Choices:"), 9)  # all but the pastor question
+        self.assertIn('"Grace first: remind me God hasn\'t given up on me" (grace-first)', setup)
+        self.assertIn('"Plan first: help me keep it from happening again" (plan-first)', setup)
+        self.assertIn("You'll get both; this only sets the order.", setup)
+
     def test_setup_asks_one_question_at_a_time(self):
         # On the phone, setup first sent several questions at once.
         text = " ".join(self.md.split())
@@ -318,7 +328,7 @@ class SkillText(unittest.TestCase):
         self.assertIn("right through to the last one", text)
         # The app's drawer has a Skip button; a skip keeps the default.
         self.assertIn("If he skips a question, keep the default for it", text)
-        setup = text[text.index("## Setup"):text.index("Save it all in one call.")]
+        setup = text[text.index("## Setup"):text.index("Save it all in one call")]
         self.assertEqual(re.findall(r" (\d+)\. ", setup), [str(n) for n in range(1, 11)])
 
     def test_every_pastor_who_applies_speaks_unless_he_chose_one(self):
