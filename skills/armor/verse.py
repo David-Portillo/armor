@@ -329,13 +329,18 @@ def save_settings(raw):
     # missing answer means the default.
     pulpit = s.get("pulpit", "all")
     problems = []
-    if not isinstance(tradition, str) or not tradition.strip():
-        problems.append("tradition must be a name")
+    # Both may be empty: a skipped tradition means none is assumed, and no
+    # pastors means replies go without From the Pulpit.
+    if tradition is None:
+        tradition = ""
+    if not isinstance(tradition, str):
+        problems.append("tradition must be text (empty for none)")
     if region not in REGIONS:
         problems.append(f"crisis_region must be one of {', '.join(REGIONS)}")
-    # Every response includes From the Pulpit, which needs at least one pastor.
-    if not isinstance(pastors, list) or not pastors or not all(isinstance(n, str) and n.strip() for n in pastors):
-        problems.append("pastors must list at least one name")
+    if pastors is None:
+        pastors = []
+    if not isinstance(pastors, list) or not all(isinstance(n, str) and n.strip() for n in pastors):
+        problems.append("pastors must be a list of names (empty for none)")
     if pulpit not in PULPIT:
         problems.append(f"pulpit must be one of {', '.join(PULPIT)}")
     # His own pastors ride in the line as short summaries: in the Claude app
@@ -370,15 +375,15 @@ def save_settings(raw):
         "nkjv_link: true",
         f"tradition: {json.dumps(tradition.strip(), ensure_ascii=False)}",
         f"crisis_region: {region}",
-        "pastors:",
+        "pastors:" if names else "pastors: []",
         *[f"  - {json.dumps(n, ensure_ascii=False)}" for n in names],
         f"pulpit: {pulpit}",
         "tone:",
         *[f"  {key}: {tone[key]}" for key in TONE],
     ]) + "\n"
     (HERE / "settings.yaml").write_text(text, encoding="utf-8")
-    line = (f"armor settings: tradition {tradition.strip()}; crisis line {region}; "
-            f"pastors {', '.join(names)}; pulpit {pulpit}; " + "; ".join(f"{k} {tone[k]}" for k in TONE))
+    line = (f"armor settings: tradition {tradition.strip() or 'none'}; crisis line {region}; "
+            f"pastors {', '.join(names) or 'none'}; pulpit {pulpit}; " + "; ".join(f"{k} {tone[k]}" for k in TONE))
     for m in mine:
         about = "living" if m["living"] else "no longer living"
         if str(m.get("speaks_to", "")).strip():

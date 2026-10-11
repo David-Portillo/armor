@@ -6,16 +6,12 @@
 translation: KJV            # the only bundled text for now
 modern_rendering: true      # "in today's words" line under each quote
 nkjv_link: true
-tradition: Baptist          # e.g. Baptist, Reformed, Pentecostal, non-denominational
+tradition: ""               # none until he chooses: Baptist, Reformed, Pentecostal, non-denominational, or his own
 crisis_region: US           # US, CA, UK, IE, AU, or other
 
-pastors:                    # From the Pulpit uses those with a profile in pastors/
-  - Charles Spurgeon
-  - Charles Stanley
-  - Voddie Baucham
-  - Tony Evans
-  - John Ramirez
-  - David Wilkerson
+pastors: []                 # none until he chooses; From the Pulpit appears only with pastors he approved.
+                            # Starting profiles in pastors/: Charles Spurgeon, Charles Stanley,
+                            # Voddie Baucham, Tony Evans, John Ramirez, David Wilkerson
 pulpit: all                 # all: every pastor whose teaching applies | one: only the best fit
 
 tone:

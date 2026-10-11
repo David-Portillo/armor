@@ -244,12 +244,25 @@ class SetupAndPastors(unittest.TestCase):
         self.assertEqual([p["name"] for p in out["pastors"]],
                          ["Charles Spurgeon", "David Wilkerson", "Tony Evans"])
 
-    def test_at_least_one_pastor_is_required(self):
-        # Every response includes From the Pulpit.
-        code, out = self.run_verse("--save-settings", json.dumps(dict(self.ANSWERS, pastors=[])))
-        self.assertEqual(code, 1)
-        self.assertIn("at least one", out["errors"][0])
-        self.assertFalse((self.dir / "settings.yaml").exists())
+    def test_no_pastors_and_no_tradition_are_allowed(self):
+        # With none chosen, replies go without From the Pulpit and assume no
+        # tradition; nothing stands in for them.
+        code, saved = self.run_verse("--save-settings", json.dumps(dict(self.ANSWERS, pastors=[], tradition="")))
+        self.assertEqual(code, 0, saved)
+        text = (self.dir / "settings.yaml").read_text()
+        self.assertIn("pastors: []", text)
+        self.assertIn('tradition: ""', text)
+        self.assertTrue(saved["line"].startswith("armor settings: tradition none; crisis line US; pastors none;"))
+
+    def test_a_tradition_he_types_is_kept_as_given(self):
+        code, saved = self.run_verse("--save-settings", json.dumps(dict(self.ANSWERS, tradition="Free Methodist")))
+        self.assertEqual(code, 0, saved)
+        self.assertIn('tradition: "Free Methodist"', (self.dir / "settings.yaml").read_text())
+
+    def test_defaults_choose_no_pastors_and_no_tradition(self):
+        defaults = (self.dir / "settings.example.yaml").read_text()
+        self.assertRegex(defaults, r'(?m)^tradition: ""')
+        self.assertRegex(defaults, r"(?m)^pastors: \[\]")
 
     def test_a_users_correction_replaces_the_starting_profile(self):
         # Setup asks whether each profile is accurate; a correction he
@@ -310,9 +323,9 @@ class SkillText(unittest.TestCase):
         self.assertIn("name: armor", front.splitlines())
 
     def test_from_the_pulpit_in_every_reply(self):
-        self.assertIn("The section is in every response and in every other reply about what he's going through",
-                      " ".join(self.md.split()))
-        self.assertNotIn("leave this section out", self.md)
+        self.assertIn("When he has pastors, the section is in every response and in every other reply about "
+                      "what he's going through", " ".join(self.md.split()))
+        self.assertNotIn("If no reviewed profile fits, leave this section out", self.md)
         self.assertNotIn("no devotional", self.md)
 
     def test_first_use_starts_with_setup(self):
@@ -354,6 +367,22 @@ class SkillText(unittest.TestCase):
         self.assertIn("verse.py --save-pastor", text)
         self.assertIn('Each "my pastor" entry in it is a pastor he approved himself', text)
 
+    def test_from_the_pulpit_only_from_his_own_pastors(self):
+        text = " ".join(self.md.split())
+        self.assertIn("If he has none, leave this section out entirely, with no heading and no stand-in", text)
+        self.assertIn("never stand another pastor in for him", text)
+        self.assertNotIn("use the reviewed starting pastors", text)
+        self.assertNotIn("he needs at least one", text)
+
+    def test_setup_questions_follow_earlier_answers(self):
+        text = " ".join(self.md.split())
+        self.assertIn("Ask it only if he approved two or more pastors; otherwise skip it and renumber", text)
+        self.assertIn('count it out and renumber the rest ("3 of 9")', text)
+        self.assertIn("If his tradition differs from the starting pastors'", text)
+        self.assertIn("Before each question, check that it still makes sense given his earlier answers", text)
+        self.assertIn("If you don't know enough about him to write anything true", text)
+        self.assertIn("Empty means none: assume no tradition", text)
+
     def test_setup_asks_one_question_at_a_time(self):
         # On the phone, setup first sent several questions at once.
         text = " ".join(self.md.split())
@@ -363,10 +392,10 @@ class SkillText(unittest.TestCase):
         # numbered list is only the fallback.
         self.assertIn("Whenever you have a tool that shows him choices to tap", text)
         # On the phone the drawer came up for the first question only.
-        self.assertIn("ask every setup question with it: all ten, and each pastor's approval", text)
+        self.assertIn("ask every setup question that applies with it, and each pastor's approval", text)
         self.assertIn("right through to the last one", text)
         # The app's drawer has a Skip button; a skip keeps the default.
-        self.assertIn("If he skips a question, keep the default for it", text)
+        self.assertIn("If he skips a question, keep what his settings already say for it", text)
         setup = text[text.index("## Setup"):text.index("Save it all in one call")]
         self.assertEqual(re.findall(r" (\d+)\. ", setup), [str(n) for n in range(1, 11)])
 
@@ -383,8 +412,8 @@ class SkillText(unittest.TestCase):
         self.assertIn("The reply also carries one Scripture block", text)
         self.assertIn("Every reply that carries From the Pulpit carries Scripture too", text)
         self.assertIn("Tie the section to at least one passage", text)
-        self.assertIn("one short verse and From the Pulpit (one sentence from each pastor who speaks, per `pulpit`) follow",
-                      text)
+        self.assertIn("one short verse and, when he has pastors, From the Pulpit (one sentence from each pastor who "
+                      "speaks, per `pulpit`) follow", text)
 
     def test_referenced_verses_are_shown_with_todays_words(self):
         # On the phone the tester saw references like (Psalm 27:14) in From the
