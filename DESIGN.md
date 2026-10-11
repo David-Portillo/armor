@@ -61,8 +61,8 @@ the computer. What that requires:
 - One SKILL.md for every surface, using only the frontmatter keys the app
   accepts (`name`, `description`, `license`, `compatibility`, `metadata`,
   `allowed-tools`); any other key fails an upload.
-- Claude Code and Cowork fill in `${CLAUDE_SKILL_DIR}` with the skill's
-  folder; the app's chat doesn't, and copies the folder into its sandbox
+- Claude Code and Cowork fill in the skill-folder placeholder
+  (CLAUDE_SKILL_DIR) with the skill's folder; the app's chat doesn't, and copies the folder into its sandbox
   instead. SKILL.md has Claude tell which it is in from whether the path got
   filled in, and in chat find `verse.py` itself. (In the first app test Claude
   guessed `/mnt/skills/plugins/armor` and the step failed.) The placeholder

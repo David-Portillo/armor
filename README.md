@@ -74,8 +74,8 @@ in a hard moment.
 To work on armor itself, clone the repository and link the skill folder:
 
 ```sh
-git clone https://github.com/David-Portillo/armor
-ln -s "$PWD/armor/skills/armor" ~/.claude/skills/armor
+git clone https://github.com/David-Portillo/armor ~/armor
+ln -s ~/armor/skills/armor ~/.claude/skills/armor
 ```
 
 Your answers from setup are saved in `skills/armor/settings.yaml`, and the
