@@ -141,8 +141,9 @@ as `/armor:armor`.
 3. **Response**, every time in the same three sections:
    - **Scripture**: the passage in the KJV, a plain "in today's words" line
      under it, and an NKJV link (see Sources).
-   - **From the Pulpit**: what one of the pastors he approved taught on this
-     struggle (see Sources). Every response includes it.
+   - **From the Pulpit**: what each of the pastors he approved taught on this
+     struggle, every one whose teaching applies (see Sources). Every response
+     includes it.
    - **Next step**: one thing to do in the next hour, not a program. It is
      something he can do alone (read a psalm aloud, pray, step outside).
      Reaching out to a person is offered as a suggestion, never assumed:
@@ -165,8 +166,8 @@ stands without the Word under it. Only setup and the
 bare check-in, before he has said what's going on, go without it.
 
 Length: about what the first dry run produced. Two short passages, each with
-two or three sentences on why it applies; a paragraph from the pastor; one
-next step; one gentle question. Anything beyond that waits for "want more?"
+two or three sentences on why it applies; two or three sentences from each
+pastor whose teaching applies; one next step; one gentle question. Anything beyond that waits for "want more?"
 
 Moments map to response shapes. For example, "tempted right now" is short and
 urgent, and getting away from it comes first, in the follow-up reply. "After a
@@ -367,14 +368,17 @@ and what the directory checks.
 
 - A summary of what a pastor teaches on the struggle, with his name and the
   Bible references he leans on. No sermon links and no web searching.
-- In every reply about what he's going through: a paragraph in the full
-  response, two or three sentences in the follow-up question, a sentence or
-  two after the safety essentials in a safety reply. armor picks, from the
-  pastors he approved, the one who speaks most to his struggle (each profile lists what he `speaks_to`); if
-  none speaks to it directly, the one whose teaching comes closest, connected
-  honestly. If none of his pastors has a profile it can use, it falls back to
-  a reviewed starting pastor and tells him once that `/armor setup` lets him
-  choose.
+- In every reply about what he's going through, every pastor he approved
+  whose teaching applies gets his own line, most fitting first, named in
+  bold: two or three sentences each in the full response, one sentence each
+  in the follow-up question and after the safety essentials in a safety
+  reply. A pastor whose profile has nothing to say to the struggle is left
+  out (each profile lists what he `speaks_to`); if none applies directly, the
+  one whose teaching comes closest, connected honestly. If none of his
+  pastors has a profile it can use, the reviewed starting pastors stand in,
+  and armor tells him once that `/armor setup` lets him choose. (Changed
+  2026-10-11 from one pastor per reply: the tester wanted all of his
+  pastors' points of view.)
 - Each pastor has a profile, `pastors/<name>.md`, holding what he is actually
   known for: recurring themes, the passages he leans on, his voice, and the
   struggles he speaks to most strongly.

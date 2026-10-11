@@ -274,8 +274,8 @@ class SkillText(unittest.TestCase):
         self.assertIn("name: armor", front.splitlines())
 
     def test_from_the_pulpit_in_every_reply(self):
-        self.assertIn("One short paragraph in every response, and a shorter one in every other\n"
-                      "reply about what he's going through", self.md)
+        self.assertIn("The section is in every response and in every other reply about what he's going through",
+                      " ".join(self.md.split()))
         self.assertNotIn("leave this section out", self.md)
         self.assertNotIn("no devotional", self.md)
 
@@ -310,13 +310,19 @@ class SkillText(unittest.TestCase):
         setup = text[text.index("## Setup"):text.index("Save it all in one call.")]
         self.assertEqual(re.findall(r" (\d)\. ", setup), [str(n) for n in range(1, 10)])
 
+    def test_every_pastor_who_applies_speaks(self):
+        text = " ".join(self.md.split())
+        self.assertIn("Every one of his `pastors` whose teaching applies to what he's facing gets his own line", text)
+        self.assertIn("### From the Pulpit\n", self.md)
+
     def test_scripture_comes_with_every_pastor(self):
         # On the phone the follow-up reply had From the Pulpit but no verses.
         text = " ".join(self.md.split())
         self.assertIn("The reply also carries one Scripture block", text)
         self.assertIn("Every reply that carries From the Pulpit carries Scripture too", text)
-        self.assertIn("Tie it to at least one passage", text)
-        self.assertIn("one short verse and a sentence or two From the Pulpit follow", text)
+        self.assertIn("Tie the section to at least one passage", text)
+        self.assertIn("one short verse and From the Pulpit (one sentence from each pastor whose teaching applies) follow",
+                      text)
 
     def test_safety_still_comes_first_in_crisis_replies(self):
         self.assertIn("What\n  keeps him safe always comes first;", self.md)

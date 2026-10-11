@@ -24,9 +24,9 @@ Every reply has the same three parts:
   > saves those who are crushed in spirit."
   > [Read in NKJV ↗](https://www.biblegateway.com/passage/?search=Psalm+34%3A18&version=NKJV)
 
-- **From the Pulpit.** What one of your pastors is known for teaching on what
-  you're facing, in his spirit but never in his voice, drawn only from a
-  profile you approved.
+- **From the Pulpit.** What each of your pastors is known for teaching on what
+  you're facing, every one whose teaching applies, in his spirit but never in
+  his voice, drawn only from profiles you approved.
 - **Next step.** One thing to do in the next hour.
 
 It never shames you, and it never quotes Scripture from memory: every verse
