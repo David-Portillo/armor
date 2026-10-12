@@ -340,7 +340,7 @@ class SkillText(unittest.TestCase):
     def test_setup_says_why_each_pastor_is_shown(self):
         text = " ".join(self.md.split())
         self.assertIn("armor never says anything in a pastor's name that he hasn't checked", text)
-        self.assertIn('"Is this an accurate picture of <name>?', text)
+        self.assertIn('Is this an accurate picture of <name>? armor will draw on it in From the Pulpit."', text)
         self.assertIn('"Yes, use him", "Something\'s off" and "Leave him out"', text)
 
     def test_setup_choices_are_worded_exactly(self):
@@ -443,8 +443,20 @@ class SkillText(unittest.TestCase):
         self.assertIn("A pastor's profile is the exception: write it out in full in your message, as ordinary text, "
                       "before you open the tool for his approval question", text)
         self.assertIn("for a starting pastor and for one written on the spot alike", text)
-        self.assertIn("Write it out in full in your message, then ask the same question with the same choices", text)
-        self.assertIn("Each pastor's approval comes right after his profile, written out in your message.", text)
+        self.assertIn("Write it out in full in your message, then ask the same question as for the starting pastors, "
+                      "short version included, with the same choices", text)
+        self.assertIn("Each pastor's approval comes right after his profile, written out in your message, and its "
+                      "question carries the profile's short version.", text)
+
+    def test_approval_question_carries_the_profile(self):
+        # Two more phone runs drafted the profile privately and opened the
+        # drawer without showing it; the drawer's question is the one thing
+        # sure to reach him, so it carries the short version.
+        text = " ".join(self.md.split())
+        self.assertIn('"<Name> (<his dates>), <who he is, in a few words>. Known for <two or three things>. '
+                      'On the struggles armor meets: <one sentence>. Is this an accurate picture of <name>? '
+                      'armor will draw on it in From the Pulpit."', text)
+        self.assertIn("the approval question itself always carries the profile's short version", text)
 
     def test_crisis_replies_stay_short_and_safety_first(self):
         # Live crisis tests: a pastor's line pulled in a full verse block, and

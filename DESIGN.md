@@ -417,7 +417,9 @@ and what the directory checks.
     pastor's name that he hasn't checked), then shows each pastor he picks,
     one at a time (who he is, what he's known for teaching, what he says to
     the struggles armor meets), and asks "Is this an accurate picture of
-    him?": yes, something's off, or leave him out. It saves only the ones he
+    him?", with the profile's short version in the question itself, since
+    the drawer may be all he sees: yes, something's off, or leave him out.
+    It saves only the ones he
     approves, and approving none is fine. If something's off, armor rewrites
     the profile with his correction and saves it once he approves, the same
     way as a pastor he adds (below); it replaces the starting profile for
@@ -508,7 +510,11 @@ phone test a pastor written on the spot (Paul Washer) got his approval drawer
 with no profile above it, and the drawer shows only the question and the
 choice labels; SKILL.md now says in a sentence of its own, and again where
 pastors are written on the spot, that the profile is written out in the
-message before the drawer opens (1.0.4). Each tone question has one short line saying why it is
+message before the drawer opens (1.0.4). Two more phone runs still drafted
+the profile privately ("for armor's knowledge base") and opened the drawer
+without it, though a web run showed it; since the drawer's question is the
+one thing sure to reach him, it now carries the profile's short version
+(1.0.5). Each tone question has one short line saying why it is
 asked, so the user knows what they are choosing:
 
 1. **When you're hurting, should I listen first, jump to what to do, or ask

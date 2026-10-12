@@ -231,9 +231,10 @@ short thanks for his last answer). A pastor's profile is the exception: write
 it out in full in your message, as ordinary text, before you open the tool
 for his approval question, every time, for a starting pastor and for one
 written on the spot alike (before the first one, also the sentence on why
-he's checking them). The drawer shows only the question and the choice
-labels, so a profile left out of your message, or put inside the tool, never
-reaches him, and he'd be asked to approve something he can't see. Only
+he's checking them). The drawer shows only its question and its choices, and
+on the phone the profile has still gone missing from the message, so the
+approval question itself always carries the profile's short version (see
+question 2): whatever else reaches him, he sees what he's approving. Only
 without such a tool,
 give the choices as a short numbered list, so he can answer with just a
 number. He can always answer in his own words instead. If he skips a
@@ -254,12 +255,14 @@ his answer before the next question. Never put two questions in one message.
    Then tell him in a sentence why the next step matters: armor never says
    anything in a pastor's name that he hasn't checked, so it will show him
    what it knows about each one he picked. Take them one at a time: in your
-   message, above the question and never inside the tap tool, show who the
-   pastor is, what he is known for teaching and what he
-   says to the struggles armor meets, all from that pastor's `profile` text;
-   then ask, "Is this an accurate picture of <name>? armor will draw on it in
-   From the Pulpit," with the choices "Yes, use him", "Something's off" and
-   "Leave him out". Only the pastors he approves, from the list or his own, go
+   message, above the question, show who the pastor is, what he is known for
+   teaching and what he says to the struggles armor meets, all from that
+   pastor's `profile` text. Then ask, with the profile's short version in the
+   question itself (plain sentences, under seventy words): "<Name> (<his
+   dates>), <who he is, in a few words>. Known for <two or three things>. On
+   the struggles armor meets: <one sentence>. Is this an accurate picture of
+   <name>? armor will draw on it in From the Pulpit." The choices: "Yes, use
+   him", "Something's off" and "Leave him out". Only the pastors he approves, from the list or his own, go
    in `pastors`; approving none is fine, and then replies go without From the
    Pulpit. If
    something's off, ask what, write the profile again with his correction,
@@ -302,7 +305,8 @@ his answer before the next question. Never put two questions in one message.
 Each of these questions that applies, and each pastor's approval, is its own
 question in the tap tool when you have it, right through to the last one,
 with the choices worded exactly as above. Each pastor's approval comes
-right after his profile, written out in your message.
+right after his profile, written out in your message, and its question
+carries the profile's short version.
 
 Save it all in one call: `tradition` as he gave it (empty for none),
 `pastors` as he approved them (empty for none), and the value in parentheses
@@ -324,7 +328,8 @@ aren't sure of, in the shape below. If you don't know enough about him to
 write anything true (his own church's pastor, say), don't guess: ask him what
 that pastor teaches on the struggles armor meets, write the profile from his
 words and say so in it. Write it out in full in your message, then ask the
-same question with the same choices as the starting pastors ("Is this an accurate picture of <name>?"); if
+same question as for the starting pastors, short version included, with the
+same choices; if
 something's off, fix it and ask again. Only once he approves it, save it:
 
 `python3 ${CLAUDE_SKILL_DIR}/verse.py --save-pastor '{"name": "First Last", "living": true, "speaks_to": "fear, hope", "profile": "# First Last\nWho he is..."}'`
