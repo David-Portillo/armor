@@ -88,7 +88,9 @@ conversation.
 
 1. **Setup or check-in.** The first time someone uses armor (`first_run` is
    true), setup comes first: open with "Let's go through the setup. If you've
-   done it before, paste your armor settings line instead." If he pastes a
+   done it before, paste your armor settings line instead." Use those words
+   whenever `first_run` is true, including when he typed `/armor setup`. If he
+   pastes a
    line starting "armor settings:", use it and skip the questions: outside the
    app's chat, also save it with `--save-settings` so he isn't asked again; in
    the app's chat, remind him in one sentence that keeping it in Claude's

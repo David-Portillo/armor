@@ -360,6 +360,9 @@ class SkillText(unittest.TestCase):
         self.assertIn('"Let\'s go through the setup. If you\'ve done it before, paste your armor settings line instead."',
                       text)
         self.assertIn('If he pastes a line starting "armor settings:", use it and skip the questions', text)
+        # In the live test, a first run started with /armor setup usually left
+        # the paste option out.
+        self.assertIn("Use those words whenever `first_run` is true, including when he typed `/armor setup`", text)
 
     def test_new_pastors_are_written_on_the_spot_and_saved(self):
         text = " ".join(self.md.split())

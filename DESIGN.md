@@ -566,6 +566,21 @@ should take with a man who is struggling.
   from this repository as a plugin: the skill loaded and setup began, but
   three lookups failed before Claude found `verse.py` under
   `~/.claude/plugins/synced/`; the search now starts there.
+- **Setup combinations, tested live (2026-10-12).** Six runs of the real
+  skill in Claude Code, each a new user, answering one question at a time:
+  tradition from the list, typed ("Free Methodist", "Catholic") or skipped;
+  pastors from the list, typed (David Jeremiah, Paul Washer), his own
+  church's pastor unknown to Claude, a mix, or none; a "Something's off"
+  correction. All behaved as designed: question 3 only with two or more
+  pastors and the rest renumbered ("3 of 9"); typed traditions kept, with a
+  note when the starting pastors differ; no From the Pulpit at all with no
+  pastors; a pastor's teaching left out when it didn't fit; profiles written
+  on the spot accurate and honest about passages; the unknown pastor not
+  guessed at but written from the user's words; the correction saved and
+  replacing the starting profile; earlier answers used ("your church is in
+  Calgary, so I'm guessing Canada"). One fix: a first run started with
+  `/armor setup` usually left out the paste option (1.0.2). Not covered: the
+  app's drawer (the runs were text-only) and the safety path.
 - **What `tradition` changes.** Nothing is defined yet. For a Baptist, one
   clear effect: a fall never puts his salvation in doubt (eternal security),
   which shapes every "after a fall" reply.
