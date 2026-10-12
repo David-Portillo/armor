@@ -435,6 +435,21 @@ class SkillText(unittest.TestCase):
         self.assertIn('> **Psalm 27:14 (KJV)**: "Wait on the LORD: be of good courage,', section)
         self.assertIn("> *In today's words:*", section)
 
+    def test_crisis_replies_stay_short_and_safety_first(self):
+        # Live crisis tests: a pastor's line pulled in a full verse block, and
+        # a self-harm reply put the wound check after the devotional.
+        text = " ".join(self.md.split())
+        self.assertIn("The safety replies (the safety step, and every reply once he has said yes or told you he's "
+                      "hurting himself) are the one exception. They stay short: each pastor gets one sentence, a "
+                      "passage he names stays a linked reference without its verse block, and the section comes "
+                      "after the Scripture block.", text)
+        self.assertIn("one short verse as a Scripture block, From the Pulpit when he has pastors", text)
+        self.assertIn("the same care, in the same order. First, whether a wound needs medical attention tonight", text)
+        self.assertIn("only then one short verse and From the Pulpit", text)
+
+    def test_todays_words_keeps_the_kjv_names_of_things(self):
+        self.assertIn("(a juniper stays a juniper)", " ".join(self.md.split()))
+
     def test_safety_still_comes_first_in_crisis_replies(self):
         self.assertIn("What\n  keeps him safe always comes first;", self.md)
         self.assertIn("then, last, ask him directly", self.md)

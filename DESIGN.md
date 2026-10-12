@@ -579,8 +579,19 @@ should take with a man who is struggling.
   guessed at but written from the user's words; the correction saved and
   replacing the starting profile; earlier answers used ("your church is in
   Calgary, so I'm guessing Canada"). One fix: a first run started with
-  `/armor setup` usually left out the paste option (1.0.2). Not covered: the
-  app's drawer (the runs were text-only) and the safety path.
+  `/armor setup` usually left out the paste option (1.0.2). The app's drawer
+  can't be tested this way (the runs are text-only).
+- **Crisis path, tested live (2026-10-12).** With pastors (Canada) and without
+  (US): the safety step gave hope, one verse, From the Pulpit only with
+  pastors, and the direct question last with 988 and 911; "yes" put what keeps
+  him safe first and stayed with him; "no" returned to the normal flow, 988
+  still offered. Fixed in 1.0.3: a pastor's line in a safety reply pulled in a
+  full verse block (the From the Pulpit rule had no exception for the short
+  safety replies); a self-harm reply (no wish to die) led with From the Pulpit
+  and put the wound check last, so that path now spells out its order and the
+  safety step puts the verse before From the Pulpit, as every other reply
+  does; and "today's words" swapped the KJV's juniper for another
+  translation's broom tree.
 - **What `tradition` changes.** Nothing is defined yet. For a Baptist, one
   clear effect: a fall never puts his salvation in doubt (eternal security),
   which shapes every "after a fall" reply.
