@@ -227,8 +227,14 @@ the rest ("3 of 9"). Whenever you have a tool that shows him choices to tap
 tool), ask every setup question that applies with it, and each pastor's
 approval, one question per call, not just the first. The question and its
 choices go in the tool, not in your text; around it, a few words at most (a
-short thanks for his last answer), except a pastor's profile, which you show
-in your message just above his approval question. Only without such a tool,
+short thanks for his last answer). A pastor's profile is the exception: write
+it out in full in your message, as ordinary text, before you open the tool
+for his approval question, every time, for a starting pastor and for one
+written on the spot alike (before the first one, also the sentence on why
+he's checking them). The drawer shows only the question and the choice
+labels, so a profile left out of your message, or put inside the tool, never
+reaches him, and he'd be asked to approve something he can't see. Only
+without such a tool,
 give the choices as a short numbered list, so he can answer with just a
 number. He can always answer in his own words instead. If he skips a
 question, keep what his settings already say for it (on a first run, the
@@ -248,7 +254,8 @@ his answer before the next question. Never put two questions in one message.
    Then tell him in a sentence why the next step matters: armor never says
    anything in a pastor's name that he hasn't checked, so it will show him
    what it knows about each one he picked. Take them one at a time: in your
-   message, show who the pastor is, what he is known for teaching and what he
+   message, above the question and never inside the tap tool, show who the
+   pastor is, what he is known for teaching and what he
    says to the struggles armor meets, all from that pastor's `profile` text;
    then ask, "Is this an accurate picture of <name>? armor will draw on it in
    From the Pulpit," with the choices "Yes, use him", "Something's off" and
@@ -294,7 +301,8 @@ his answer before the next question. Never put two questions in one message.
 
 Each of these questions that applies, and each pastor's approval, is its own
 question in the tap tool when you have it, right through to the last one,
-with the choices worded exactly as above.
+with the choices worded exactly as above. Each pastor's approval comes
+right after his profile, written out in your message.
 
 Save it all in one call: `tradition` as he gave it (empty for none),
 `pastors` as he approved them (empty for none), and the value in parentheses
@@ -315,8 +323,8 @@ he is: only what that pastor is actually known for, leaving out anything you
 aren't sure of, in the shape below. If you don't know enough about him to
 write anything true (his own church's pastor, say), don't guess: ask him what
 that pastor teaches on the struggles armor meets, write the profile from his
-words and say so in it. Show it to him with the same question and
-choices as the starting pastors ("Is this an accurate picture of <name>?"); if
+words and say so in it. Write it out in full in your message, then ask the
+same question with the same choices as the starting pastors ("Is this an accurate picture of <name>?"); if
 something's off, fix it and ask again. Only once he approves it, save it:
 
 `python3 ${CLAUDE_SKILL_DIR}/verse.py --save-pastor '{"name": "First Last", "living": true, "speaks_to": "fear, hope", "profile": "# First Last\nWho he is..."}'`

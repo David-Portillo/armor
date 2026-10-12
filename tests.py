@@ -435,6 +435,17 @@ class SkillText(unittest.TestCase):
         self.assertIn('> **Psalm 27:14 (KJV)**: "Wait on the LORD: be of good courage,', section)
         self.assertIn("> *In today's words:*", section)
 
+    def test_profile_is_written_out_before_its_approval_question(self):
+        # On the phone, a pastor written on the spot (Paul Washer) got the
+        # approval drawer with no profile above it: the drawer shows only the
+        # question and the choice labels.
+        text = " ".join(self.md.split())
+        self.assertIn("A pastor's profile is the exception: write it out in full in your message, as ordinary text, "
+                      "before you open the tool for his approval question", text)
+        self.assertIn("for a starting pastor and for one written on the spot alike", text)
+        self.assertIn("Write it out in full in your message, then ask the same question with the same choices", text)
+        self.assertIn("Each pastor's approval comes right after his profile, written out in your message.", text)
+
     def test_crisis_replies_stay_short_and_safety_first(self):
         # Live crisis tests: a pastor's line pulled in a full verse block, and
         # a self-harm reply put the wound check after the devotional.
