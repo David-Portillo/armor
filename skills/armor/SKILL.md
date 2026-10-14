@@ -1,6 +1,6 @@
 ---
 name: armor
-description: Scripture-based encouragement for a Christian man in a hard moment (lust, depression, frustration, fear, self-destruction) with exact KJV verses, a plain modern rendering, NKJV links, what his pastors taught, and one next step. Use only when the user's message starts with /armor or asks to try or set up armor; never start it on your own.
+description: Scripture-based encouragement for a Christian man in a hard moment (lust, depression, frustration, fear, self-destruction) with each verse in today's words, made from the KJV, and an NKJV link, what his pastors taught, and one next step. Use only when the user's message starts with /armor or asks to try or set up armor; never start it on your own.
 license: MIT
 allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/verse.py *)
 ---
@@ -126,9 +126,9 @@ conversation.
    his moment: what happened, how long it's been like this, what set it off.
    If he's tempted right now, open that reply by telling him to get away from
    it first (close the tab or app, change rooms, turn the lights on). The
-   reply also carries one Scripture block (the KJV, today's words and the NKJV
-   link, as below) and, when he has pastors, a short From the Pulpit (one
-   sentence from each pastor who speaks, per `pulpit`), each under its
+   reply also carries one Scripture block (the reference, today's words and
+   the NKJV link, as below) and, when he has pastors, a short From the Pulpit
+   (one sentence from each pastor who speaks, per `pulpit`), each under its
    heading; the question comes last.
 4. **The response**, below, once he answers.
 5. **Stay with him** if he keeps talking.
@@ -144,13 +144,16 @@ These sections, in this order, under these headings, in every response
 ### Scripture
 
 Two short passages that speak to what he told you. Show each exactly like
-this, then two or three sentences on why it speaks to him:
+this (its reference, the passage in today's words, its NKJV link), then two
+or three sentences on why it speaks to him:
 
-> **Psalm 34:18 (KJV)**: "The LORD is nigh unto them that are of a broken
-> heart; and saveth such as be of a contrite spirit."
+> **Psalm 34:18**
 > *In today's words:* "The LORD is near to those who have a broken heart, and
 > saves those who are crushed in spirit."
 > [Read in NKJV ↗](https://www.biblegateway.com/passage/?search=Psalm+34%3A18&version=NKJV)
+
+Every verse you show, in any reply, takes this same shape. The KJV text the
+lookup returns is what you make today's words from; it isn't shown.
 
 ### From the Pulpit
 
@@ -175,8 +178,8 @@ Use each pastor's `profile` text from the first lookup; it needs no extra
 call. Say what he taught on it: in his spirit, in the third person
 ("Wilkerson taught that..."), in the tense his profile gives, and only what it
 supports. Never quote him. Tie the section to at least one passage: its
-reference linked to the NKJV in the line, and the verse shown after it (see
-Scripture rules), looked up like every verse.
+reference in the line, and the verse shown after it (see Scripture rules),
+looked up like every verse.
 Attribute a passage to a pastor only where his profile lists it under
 passages he preached or wrote on; otherwise it is your own pairing, said as
 such ("a passage that fits what he taught is..."). A pastor of his with no
@@ -184,18 +187,18 @@ profile you can use (none in `profiles`, none in his settings line) is left
 out; never stand another pastor in for him.
 
 Every pastor's line that names a passage is followed at once by that verse,
-with its exact KJV and its "In today's words" line, before the next pastor's
-line. Never leave a bare reference in this section. Like this:
+in the same shape as under Scripture (its reference, today's words, its NKJV
+link), before the next pastor's line. Never leave a bare reference in this
+section. Like this:
 
 > **Charles Spurgeon** knew long dark seasons himself and taught that a heavy
 > spirit isn't proof God has left you. One of the psalms he wrote on tells a
-> man to wait on the LORD and take courage
-> ([Psalm 27:14](https://www.biblegateway.com/passage/?search=Psalm+27%3A14&version=NKJV)).
+> man to wait on the LORD and take courage (Psalm 27:14).
 >
-> **Psalm 27:14 (KJV)**: "Wait on the LORD: be of good courage, and he shall
-> strengthen thine heart: wait, I say, on the LORD."
+> **Psalm 27:14**
 > *In today's words:* "Wait for the LORD. Be brave, and he will strengthen
 > your heart. Yes, wait for the LORD."
+> [Read in NKJV ↗](https://www.biblegateway.com/passage/?search=Psalm+27%3A14&version=NKJV)
 >
 > **Charles Stanley** taught that in a hard season the better question is not
 > "why?" but "how should I respond?"...
@@ -359,7 +362,7 @@ his own pastors too.
 
 ## Scripture rules
 
-- Look up every verse before you use it, quoted or retold, in one call per
+- Look up every verse before you use it, shown or retold, in one call per
   reply that lists every reference you need:
 
   `python3 ${CLAUDE_SKILL_DIR}/verse.py "Psalm 34:18" "Heb 4:15-16" "Mark 3:21"`
@@ -367,34 +370,36 @@ his own pastors too.
   It prints JSON: `results`, each with `ref`, `nkjv_url`, `verses` as
   [number, text] pairs and, for psalms, `titles`; and `errors`.
 - Never quote or retell Scripture from memory. A reference listed in `errors`
-  gets only its reference and NKJV link, no quoted text.
-- "In today's words" is your own rendering, always labelled as such. Say the
-  verse the way a man would say it today: modern words, modern word order,
-  modern sentences. Swapping a few old words is not enough. Not "who will not
-  allow you to be tempted above what you are able" but "he won't let you be
-  tempted beyond what you can bear." Keep the meaning exactly: add nothing,
-  drop nothing, don't interpret. Watch for words whose meaning has shifted:
-  suffer (allow), let (hinder), prevent (go before), conversation (conduct),
-  quick (living), meat (food), charity (love). When unsure what a word means,
-  keep the KJV word. Keep the KJV's own words for things and names (a juniper
-  stays a juniper); don't swap in another translation's choice.
+  gets only its reference and NKJV link, no today's words.
+- A verse is shown only in today's words; the KJV text itself is never
+  shown. "In today's words" is your own rendering, always labelled as such:
+  make it from the KJV text the lookup returned, every verse of the passage,
+  never from memory or another translation. Say the verse the way a man would
+  say it today: modern words, modern word order, modern sentences. Swapping a
+  few old words is not enough. Not "who will not allow you to be tempted above
+  what you are able" but "he won't let you be tempted beyond what you can
+  bear." Keep the meaning exactly: add nothing, drop nothing, don't interpret.
+  Watch for words whose meaning has shifted: suffer (allow), let (hinder),
+  prevent (go before), conversation (conduct), quick (living), meat (food),
+  charity (love). When unsure what a word means, keep the KJV word. Keep the
+  KJV's own words for things and names (a juniper stays a juniper); don't swap
+  in another translation's choice.
 - A verse mentioned outside the Scripture section (in From the Pulpit, a
-  reflection or the next step) keeps its reference in the sentence, linked to
-  the NKJV, and the verse itself follows right after that paragraph or that
-  pastor's line: the exact KJV, then its "In today's words" line. For example:
+  reflection or the next step) keeps its reference in the sentence, and the
+  verse itself follows right after that paragraph or that pastor's line, in
+  the same shape: its reference, today's words, its NKJV link. For example:
 
   > ...lean on him instead of your own read of things, and he'll direct your
-  > path ([Proverbs 3:5-6](https://www.biblegateway.com/passage/?search=Proverbs+3%3A5-6&version=NKJV)).
+  > path (Proverbs 3:5-6).
   >
-  > **Proverbs 3:5-6 (KJV)**: "Trust in the LORD with all thine heart; and
-  > lean not unto thine own understanding. In all thy ways acknowledge him,
-  > and he shall direct thy paths."
+  > **Proverbs 3:5-6**
   > *In today's words:* "Trust the LORD with all your heart, and don't lean
   > on your own understanding. In everything you do, acknowledge him, and he
   > will direct your paths."
+  > [Read in NKJV ↗](https://www.biblegateway.com/passage/?search=Proverbs+3%3A5-6&version=NKJV)
 
   The safety replies stay short: there, other passages are mentioned by
-  reference only.
+  reference only, each linked to the NKJV in the sentence.
 - A psalm's title (in `titles`) is never part of verse 1. You may retell it as
   context: David prayed Psalm 142 in the cave.
 

@@ -422,18 +422,39 @@ class SkillText(unittest.TestCase):
         # On the phone the tester saw references like (Psalm 27:14) in From the
         # Pulpit and wanted the verse itself, with today's words, right after.
         text = " ".join(self.md.split())
-        self.assertIn("keeps its reference in the sentence, linked to the NKJV, and the verse itself follows "
-                      "right after that paragraph or that pastor's line", text)
-        self.assertIn('**Proverbs 3:5-6 (KJV)**: "Trust in the LORD with all thine heart;', self.md)
+        self.assertIn("keeps its reference in the sentence, and the verse itself follows right after that "
+                      "paragraph or that pastor's line, in the same shape", text)
+        self.assertIn('> **Proverbs 3:5-6**\n  > *In today\'s words:* "Trust the LORD with all your heart,', self.md)
         self.assertNotIn("retold in today's words, without quotation marks", text)
+
+    def test_verses_are_shown_in_todays_words_only(self):
+        # The tester wanted only today's words: the reference, today's words,
+        # then the NKJV link, for every verse shown. The KJV is still looked up,
+        # because today's words are made from it, but it isn't shown.
+        text = " ".join(self.md.split())
+        self.assertIn("A verse is shown only in today's words; the KJV text itself is never shown.", text)
+        self.assertIn("make it from the KJV text the lookup returned, every verse of the passage, never from "
+                      "memory or another translation", text)
+        self.assertIn("Every verse you show, in any reply, takes this same shape.", text)
+        for name in ["skills/armor/SKILL.md", "README.md", "DESIGN.md"]:
+            self.assertFalse("(KJV)**" in (ROOT / name).read_text(), f"{name} still shows a KJV quote block")
+        # Every example block: a bold reference alone on its line, then today's
+        # words, then the very link verse.py gives for that reference.
+        blocks = re.findall(r"^( *)> \*\*([1-3]?[A-Z][a-z]+ [\d:,-]+)\*\*\n"
+                            r"\1> \*In today's words:\* \"[^\"]+\"\n"
+                            r"\1> \[Read in NKJV ↗\]\((\S+)\)$", self.md, re.M)
+        self.assertEqual([ref for _, ref, _ in blocks], ["Psalm 34:18", "Psalm 27:14", "Proverbs 3:5-6"])
+        for _, ref, url in blocks:
+            self.assertEqual(url, look(ref)[1]["results"][0]["nkjv_url"], ref)
 
     def test_from_the_pulpit_shows_its_own_verse_example(self):
         # On the phone the pastor lines still came with bare references, so the
         # section now carries its own example of a line followed by its verse.
         section = self.md[self.md.index("### From the Pulpit"):self.md.index("### Next step")]
         self.assertIn("Never leave a bare reference in this section.", " ".join(section.split()))
-        self.assertIn('> **Psalm 27:14 (KJV)**: "Wait on the LORD: be of good courage,', section)
-        self.assertIn("> *In today's words:*", section)
+        self.assertIn('> **Psalm 27:14**\n> *In today\'s words:* "Wait for the LORD.', section)
+        self.assertIn("> [Read in NKJV ↗](https://www.biblegateway.com/passage/?search=Psalm+27%3A14&version=NKJV)",
+                      section)
 
     def test_profile_is_written_out_before_its_approval_question(self):
         # On the phone, a pastor written on the spot (Paul Washer) got the

@@ -15,11 +15,10 @@ advice, and it always points you to real people for those.
 
 Every reply has the same parts:
 
-- **Scripture.** The exact King James text, a plain "in today's words" line
-  under it, and a link to the same passage in the NKJV:
+- **Scripture.** Each verse in plain words, the way you'd say it today, made
+  from the King James text, with a link to the same passage in the NKJV:
 
-  > **Psalm 34:18 (KJV)**: "The LORD is nigh unto them that are of a broken
-  > heart; and saveth such as be of a contrite spirit."
+  > **Psalm 34:18**
   > *In today's words:* "The LORD is near to those who have a broken heart, and
   > saves those who are crushed in spirit."
   > [Read in NKJV ↗](https://www.biblegateway.com/passage/?search=Psalm+34%3A18&version=NKJV)
@@ -30,8 +29,9 @@ Every reply has the same parts:
   replies go without it.
 - **Next step.** One thing to do in the next hour.
 
-It never shames you, and it never quotes Scripture from memory: every verse
-comes from the Bible text bundled with the skill.
+It never shames you, and it never works from memory: every verse is looked up
+in the King James text bundled with the skill, and today's words are made from
+that text.
 
 ## Try it
 

@@ -143,8 +143,8 @@ as `/armor:armor`.
    this reply first came with the pastor but no verses.) If the settings say "depends on the
    day," it also asks whether he wants to be heard or helped.
 3. **Response**, every time in the same sections:
-   - **Scripture**: the passage in the KJV, a plain "in today's words" line
-     under it, and an NKJV link (see Sources).
+   - **Scripture**: the reference, the passage in today's words (made from
+     the KJV, which isn't shown) and an NKJV link (see Sources).
    - **From the Pulpit**: what each of the pastors he approved taught on this
      struggle, every one whose teaching applies (see Sources). In every
      response when he has pastors; with none, the section isn't there.
@@ -194,16 +194,17 @@ Example:
 > I'm really glad you said something. Feeling lost and like you don't belong
 > anywhere is heavy, and you're not the first man of God to feel it. Elijah
 > sat under a tree and asked God to take his life, and God didn't scold him.
-> He fed him, let him sleep, and met him there (1 Kings 19).
+> He fed him, let him sleep, and met him there
+> ([1 Kings 19](https://www.biblegateway.com/passage/?search=1+Kings+19&version=NKJV)).
 >
-> **From the Pulpit: Charles Spurgeon**
-> Spurgeon knew this darkness himself and wrote about it openly. He taught
-> that a heavy spirit is not proof that God has left you.
->
-> **Psalm 34:18 (KJV)**: "The LORD is nigh unto them that are of a broken
-> heart; and saveth such as be of a contrite spirit."
+> **Psalm 34:18**
 > *In today's words:* "The LORD is near to those who have a broken heart, and
 > saves those who are crushed in spirit."
+> [Read in NKJV ↗](https://www.biblegateway.com/passage/?search=Psalm+34%3A18&version=NKJV)
+>
+> **From the Pulpit**
+> **Charles Spurgeon** knew this darkness himself and taught that a heavy
+> spirit is not proof that God has left you.
 >
 > Can I ask you something straight? When you say giving up on life, have you
 > been thinking about ending it, or hurting yourself? If so, even a little,
@@ -288,23 +289,37 @@ the model reads. So:
   setting.
 - NKJV is copyrighted by Thomas Nelson, so it is linked rather than quoted:
   `https://www.biblegateway.com/passage/?search=<ref>&version=NKJV`.
-- Every verse is looked up with `verse.py` before it is quoted. Never quote
-  from model memory. If a lookup fails, give the reference and the NKJV link
-  without quoted text rather than guess.
+- Every verse is looked up with `verse.py` before it is used. Never work from
+  model memory. If a lookup fails, give the reference and the NKJV link
+  without today's words rather than guess.
 
-Each passage is shown as the exact KJV text, then a modern rendering right
-below it, then the NKJV link:
+Each passage is shown as its reference, then a modern rendering made from the
+KJV text, then the NKJV link:
 
-> **Psalm 34:18 (KJV)**: "The LORD is nigh unto them that are of a broken
-> heart; and saveth such as be of a contrite spirit."
+> **Psalm 34:18**
 > *In today's words:* "The LORD is near to those who have a broken heart, and
 > saves those who are crushed in spirit."
 > [Read in NKJV ↗](https://www.biblegateway.com/passage/?search=Psalm+34%3A18&version=NKJV)
 
+Until 1.0.6 the exact KJV opened each block, labelled (KJV), with today's
+words under it. The tester asked for only today's words, in every block, so
+the KJV is no longer shown (changed 2026-10-14). It is still looked up for
+every verse, because the rendering is made from it; with the KJV gone from
+the page, the rendering is the only wording he reads, so it must follow that
+text and never memory or another translation. The `modern_rendering`
+setting, which switched the line under each quote, went with it: there is
+no quote left for it to sit under. Tested live in Claude Code the same day,
+an anxious night with three pastors and the safety step: every verse came as
+reference, today's words and link, with no KJV shown, each rendering made
+from a lookup; the safety step kept the pastors' passages as linked
+references.
+
 The modern rendering is written by the model, so it is held to strict rules:
 
 - Always labelled ("In today's words"), never presented as Scripture or as a
-  translation. The KJV above it is the Word; the rendering only helps read it.
+  translation. It is armor's own wording of the KJV text; the NKJV link under
+  it is the translation to read.
+- Made from the KJV text the lookup returned, every verse of the passage.
 - Natural modern English: modern words, word order and sentences, the way a
   man would say it today. Swapping a few old words is not enough. The first
   app test rendered 1 Corinthians 10:13 as "who will not allow you to be
@@ -322,19 +337,20 @@ The NKJV link is there for a modern reading that is an actual translation.
 #### Verses mentioned in passing
 
 Outside the Scripture blocks (in From the Pulpit, a reflection, the next
-step), a verse keeps its reference in the sentence, linked to the NKJV, and
-the verse itself follows right after that paragraph or pastor's line: the
-exact KJV, then its "In today's words" line.
+step), a verse keeps its reference in the sentence, and the verse itself
+follows right after that paragraph or pastor's line, in the same block as
+everywhere: reference, today's words, NKJV link. Until 1.0.6 the reference
+in the sentence carried the NKJV link; the block under it carries it now, so
+the sentence keeps a plain reference.
 
 > ...lean on him instead of your own read of things, and he'll direct your
-> path ([Proverbs 3:5-6](https://www.biblegateway.com/passage/?search=Proverbs+3%3A5-6&version=NKJV)).
+> path (Proverbs 3:5-6).
 >
-> **Proverbs 3:5-6 (KJV)**: "Trust in the LORD with all thine heart; and lean
-> not unto thine own understanding. In all thy ways acknowledge him, and he
-> shall direct thy paths."
+> **Proverbs 3:5-6**
 > *In today's words:* "Trust the LORD with all your heart, and don't lean on
 > your own understanding. In everything you do, acknowledge him, and he will
 > direct your paths."
+> [Read in NKJV ↗](https://www.biblegateway.com/passage/?search=Proverbs+3%3A5-6&version=NKJV)
 
 - Shown, not only retold. These verses were first retold in today's words
   with just a linked reference, so the reading wasn't interrupted; on the
@@ -344,7 +360,7 @@ exact KJV, then its "In today's words" line.
   Jesus' *family* thought he'd lost his mind; the text says his friends (KJV)
   or his own people (NKJV). `verse.py` supplies the text and the link.
 - The safety replies stay short, so there other passages are mentioned by
-  reference only.
+  reference only, linked to the NKJV in the sentence since no block follows.
 - From the Pulpit carries its own example of a pastor's line followed by its
   verse, because in the next phone test the pastor lines still came with bare
   references: the rule lived only under Scripture rules, and Claude follows
@@ -464,8 +480,7 @@ below, so a slip in the conversation can't leave a broken file. The
 defaults:
 
 ```yaml
-translation: KJV            # the only bundled text for now
-modern_rendering: true      # "in today's words" line under each quote
+translation: KJV            # the only bundled text for now; today's words are made from it
 nkjv_link: true
 tradition: ""               # none until he chooses; from the list or his own words
 crisis_region: US           # US, CA, UK, IE, AU, or other

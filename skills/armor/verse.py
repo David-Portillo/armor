@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Verse lookup for the /armor skill.
 
-The skill must never quote Scripture from model memory: a misplaced word in a
-verse read by a man who is struggling undermines everything else it says. Every
-quote, and every verse retold in passing, goes through this script. It reads
-the bundled public-domain text in bible/<translation>/<BOOK>.txt: one file per
-book, one verse per line ("PSA 51:1 text"), with each psalm title on its own
-verse-0 line (see tools/build_bible.py in the repository).
+The skill must never work from model memory: a misplaced word in a verse read
+by a man who is struggling undermines everything else it says. Every verse it
+shows (in today's words, made from this text) or retells in passing goes
+through this script. It reads the bundled public-domain text in
+bible/<translation>/<BOOK>.txt: one file per book, one verse per line ("PSA
+51:1 text"), with each psalm title on its own verse-0 line (see
+tools/build_bible.py in the repository).
 
     verse.py "Psalm 34:18" "Heb 4:15-16" "1 John 1:9" "Romans 8:28,38-39" "Psalm 23"
     verse.py --settings "Psalm 34:18"      # first reply: settings too
@@ -58,7 +59,7 @@ prayed "in the cave"). The NKJV is copyrighted, so it is linked, not quoted.
 
 Exits 1 if any reference could not be resolved. The other results are still
 good; for the failed one the skill gives the reference and link without
-quoting text.
+today's words.
 """
 import argparse
 import json
@@ -371,7 +372,6 @@ def save_settings(raw):
     text = "\n".join([
         "# Saved by armor's setup. Run /armor setup to change it, or edit it by hand.",
         "translation: KJV",
-        "modern_rendering: true",
         "nkjv_link: true",
         f"tradition: {json.dumps(tradition.strip(), ensure_ascii=False)}",
         f"crisis_region: {region}",

@@ -4,15 +4,15 @@
     python3 tools/build_bible.py
 
 Writes skills/armor/bible/kjv/<BOOK>.txt, one file per book (GEN.txt ...
-REV.txt), each line "PSA 51:1 text". The skill quotes verses only from these
-files, never from model memory, so the wording a struggling man reads is always
-exact. Re-run only to pick up a corrected eBible.org release; the text almost
-never changes. This is a maintainer tool: the skill itself never downloads
-anything.
+REV.txt), each line "PSA 51:1 text". The skill puts every verse into today's
+words from these files, never from model memory, so what a struggling man reads
+always rests on the exact text. Re-run only to pick up a corrected eBible.org
+release; the text almost never changes. This is a maintainer tool: the skill
+itself never downloads anything.
 
 Only the KJV is bundled: the NKJV, which the skill links every reference to,
 is its modernization (same Greek text, every verse in the same place), and the
-skill puts a plain modern rendering under each KJV quote (see DESIGN.md).
+skill shows each verse in plain modern words made from the KJV (see DESIGN.md).
 
 What the build changes, and why. Every step is checked, and the bundled text is
 only replaced once all checks pass, so a bad download never corrupts it.

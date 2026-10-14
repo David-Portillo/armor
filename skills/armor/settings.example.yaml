@@ -3,8 +3,7 @@
 # out of git, so pulling updates never overwrites your choices. For the Claude
 # app, re-run package.py and upload the new ZIP after a change.
 
-translation: KJV            # the only bundled text for now
-modern_rendering: true      # "in today's words" line under each quote
+translation: KJV            # the only bundled text for now; today's words are made from it
 nkjv_link: true
 tradition: ""               # none until he chooses: Baptist, Reformed, Pentecostal, non-denominational, or his own
 crisis_region: US           # US, CA, UK, IE, AU, or other
