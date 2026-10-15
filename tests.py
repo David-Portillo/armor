@@ -492,7 +492,10 @@ class SkillText(unittest.TestCase):
         self.assertIn("only then one short verse and From the Pulpit", text)
 
     def test_todays_words_keeps_the_kjv_names_of_things(self):
-        self.assertIn("(a juniper stays a juniper)", " ".join(self.md.split()))
+        # Live tests: "today's words" swapped the KJV's juniper for another
+        # translation's broom tree, and later explained the Gentiles away.
+        self.assertIn('(a juniper stays a juniper; the Gentiles stay the Gentiles, not "the people who don\'t know '
+                      'God")', " ".join(self.md.split()))
 
     def test_safety_still_comes_first_in_crisis_replies(self):
         self.assertIn("What\n  keeps him safe always comes first;", self.md)

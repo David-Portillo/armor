@@ -312,7 +312,10 @@ no quote left for it to sit under. Tested live in Claude Code the same day,
 an anxious night with three pastors and the safety step: every verse came as
 reference, today's words and link, with no KJV shown, each rendering made
 from a lookup; the safety step kept the pastors' passages as linked
-references.
+references. One rendering turned Matthew 6:32's Gentiles into "the people
+who don't know God", an explanation rather than a rendering; the rule that
+keeps the KJV's names (the juniper) now covers peoples too, with that
+example.
 
 The modern rendering is written by the model, so it is held to strict rules:
 

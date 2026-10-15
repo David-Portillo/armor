@@ -382,8 +382,9 @@ his own pastors too.
   Watch for words whose meaning has shifted: suffer (allow), let (hinder),
   prevent (go before), conversation (conduct), quick (living), meat (food),
   charity (love). When unsure what a word means, keep the KJV word. Keep the
-  KJV's own words for things and names (a juniper stays a juniper); don't swap
-  in another translation's choice.
+  KJV's own words for things, names and peoples (a juniper stays a juniper;
+  the Gentiles stay the Gentiles, not "the people who don't know God"); don't
+  swap in another translation's choice or explain them.
 - A verse mentioned outside the Scripture section (in From the Pulpit, a
   reflection or the next step) keeps its reference in the sentence, and the
   verse itself follows right after that paragraph or that pastor's line, in
